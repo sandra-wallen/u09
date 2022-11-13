@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import User from '../database/models/user.model';
 import jwt from 'jsonwebtoken';
 
-const registerUser = async (req: Request, res: Response, next: any) => {
+const registerUser = async (req: Request, res: Response) => {
   try {
     const user = await User.create(req.body);
     user.save().then(() => {
@@ -30,7 +30,7 @@ const loginUser = async (req: Request, res: Response) => {
     }
     if (user) {
       const token = jwt.sign(
-        { id: user._id, username: user.username, isAdmin: user.isAdmin },
+        { id: user._id, isAdmin: user.isAdmin },
         process.env.JWT_SECRET!,
         {
           expiresIn: process.env.JWT_EXPIRE,
@@ -45,7 +45,13 @@ const loginUser = async (req: Request, res: Response) => {
           maxAge: 840000,
         })
         .status(200)
-        .json({ success: true, user: user.username });
+        .json({
+          success: true, 
+          user: {
+            _id: user._id,
+            email: user.email,
+            name: user.name,
+        } });
     }
   } catch (error: any) {
     return res.status(500).json(error.message);
