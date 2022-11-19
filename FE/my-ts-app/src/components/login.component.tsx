@@ -1,63 +1,48 @@
 import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector, batch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import userSlice from "../reducers/user.reducer";
-import type { rootState } from '../App';
+import { rootState } from "../store/store";
 import { useNavigate } from "react-router-dom";
+import { useAxios } from "../reusable/useAxios";
 
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const { callbackAxios } = useAxios();
 
   const userState = useSelector((store: rootState) => store.userSlice)
   const dispatch = useDispatch()
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (userState._id !== '') {
+    if (userState._id) {
       navigate('/profile');
     }
   })
 
-  const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setEmail(event.target.value);
-  }
-
-  const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setPassword(event.target.value);
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>, setState: React.Dispatch<React.SetStateAction<string>>) => {
+    setState(event.target.value);
   }
 
   const handleSubmit = async (event: React.SyntheticEvent) => {
     event.preventDefault();
+    if (callbackAxios !== undefined) {
+      const res = await callbackAxios('post', 'http://localhost:8000/login', { email, password });
 
-    try {
-      console.log(email, password)
-
-      fetch('http://localhost:8000/login', {
-        method: 'POST',
-        credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({email, password})
-      })
-        .then(res => res.json())
-        .then((data) => {
-          dispatch(userSlice.actions.setId(data.user._id));
-          dispatch(userSlice.actions.setEmail(data.user.email));
-          dispatch(userSlice.actions.setName(data.user.name));
+      if (res.success) {
+        dispatch(userSlice.actions.setId(res.user._id));
+          dispatch(userSlice.actions.setEmail(res.user.email));
+          dispatch(userSlice.actions.setName(res.user.name));
 
           localStorage.setItem('user', JSON.stringify({
-            _id: data.user._id,
-            email: data.user.email,
-            name: data.user.name
-          }))
-        })
-        .then((data) => {
-          setTimeout(() => console.log(userState), 5000)
-        })
-    } catch (error) {
-      console.log(error)
+            _id: res.user._id,
+            email: res.user.email,
+            name: res.user.name
+          }));
+      } else if (res.error) {
+        console.log(res.error); // Do something else here
+      }
     }
   } 
 
@@ -66,12 +51,12 @@ const Login: React.FC = () => {
       <form onSubmit={handleSubmit}>
         <div className="mb-3">
           <label htmlFor="emailInput" className="form-label">Email address</label>
-          <input type="email" className="form-control" id="emailInput" aria-describedby="emailHelp" value={email} onChange={handleEmailChange} />
+          <input type="email" className="form-control" id="emailInput" aria-describedby="emailHelp" value={email} onChange={(event) => handleInputChange(event, setEmail)} />
           <div id="emailHelp" className="form-text">We'll never share your email with anyone else.</div>
         </div>
         <div className="mb-3">
           <label htmlFor="passwordInput" className="form-label">Password</label>
-          <input type="password" className="form-control" id="passwordInput" value={password} onChange={handlePasswordChange} />
+          <input type="password" className="form-control" id="passwordInput" value={password} onChange={(event) => handleInputChange(event, setPassword)} />
         </div>
         <div className="mb-3 form-check">
           <input type="checkbox" className="form-check-input" id="exampleCheck1" />
