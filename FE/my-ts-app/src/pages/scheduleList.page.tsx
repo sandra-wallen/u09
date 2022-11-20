@@ -1,17 +1,19 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
-import { rootState } from "../store/store";
+import { resetStore, RootState } from "../store/store";
 import { useAxios } from "../reusable/useAxios";
 import schedulesSlice from "../reducers/schedule.reducer";
 import userSlice from "../reducers/user.reducer";
+
 import CreateSchedule from "../components/createSchedule.component";
+import ScheduleListItem from "../components/scheduleListItem.component";
 
 const ScheduleList: React.FC = () => {
 
-  const userState = useSelector((store: rootState) => store.userSlice);
-  const schedulesState = useSelector((store: rootState) => store.schedulesSlice);
+  const userState = useSelector((store: RootState) => store.user);
+  const schedulesState = useSelector((store: RootState) => store.schedules);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -24,15 +26,13 @@ const ScheduleList: React.FC = () => {
     if (res.success) {
       dispatch(schedulesSlice.actions.setSchedules(res.schedules));
 
-        localStorage.setItem('schedules', JSON.stringify(res.schedules));
     } else {
       // Do something else here
-      console.log(res.request.status)
+      console.log(res.request)
       if (res.request.status === 403) {
-        localStorage.removeItem('user');
-        localStorage.removeItem('schedules');
         dispatch(schedulesSlice.actions.clearState());
         dispatch(userSlice.actions.clearState());
+        resetStore();
       }
     }
   }
@@ -45,29 +45,45 @@ const ScheduleList: React.FC = () => {
     getSchedules();
   }, [userState._id])
 
+  
+
+  const handleDelete = async (id) => {
+    const res = await callbackAxios('delete', `http://localhost:8000/delete-schedule/${id}`);
+
+    if (res.success) {
+      const updatedList = schedulesState.schedules.filter(item => item._id !== id)
+
+      dispatch(schedulesSlice.actions.deleteSchedule(updatedList));
+    } else {
+      console.log(res.request);
+      if (res.request.status === 403) {
+        dispatch(schedulesSlice.actions.clearState());
+        dispatch(userSlice.actions.clearState());
+        resetStore();
+      }
+    }
+  }
+
 
   return (
-    <main>
+    <main className="d-flex flex-column mb-3 px-4">
 
       <CreateSchedule />
       
-      <table className="table">
+      <table className="table .container-sm">
         <thead>
           <tr>
             <th scope="col">#</th>
             <th scope="col">Title</th>
-            <th scope="col">Duration</th>
-            <th scope="col">Courses</th>
+            <th style={{width: "9%"}} scope="col">Duration</th>
+            <th style={{width: "9%"}} scope="col">Courses</th>
+            <th style={{width: "9%"}} scope="col"></th>
+            <th style={{width: "9%"}} scope="col"></th>
           </tr>
         </thead>
         <tbody>
             {schedulesState.schedules.map((schedule: any, index: any) => (
-              <tr>
-              <th scope="row">{index + 1}</th>
-              <td>{schedule.title}</td>
-              <td>{schedule.duration} weeks</td>
-              <td>{schedule.courses?.length}</td>
-              </tr>
+              <ScheduleListItem schedule={schedule} index={index} />
             ))}
         </tbody>
       </table>
