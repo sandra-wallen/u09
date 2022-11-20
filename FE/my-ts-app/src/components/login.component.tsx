@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from 'react-redux'
 import userSlice from "../reducers/user.reducer";
-import { rootState } from "../store/store";
+import { RootState } from "../store/store";
 import { useNavigate } from "react-router-dom";
 import { useAxios } from "../reusable/useAxios";
 
@@ -11,7 +11,7 @@ const Login: React.FC = () => {
   const [password, setPassword] = useState("");
   const { callbackAxios } = useAxios();
 
-  const userState = useSelector((store: rootState) => store.userSlice)
+  const userState = useSelector((store: RootState) => store.user)
   const dispatch = useDispatch()
   const navigate = useNavigate();
 
@@ -19,7 +19,7 @@ const Login: React.FC = () => {
     if (userState._id) {
       navigate('/profile');
     }
-  })
+  }, [userState._id])
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>, setState: React.Dispatch<React.SetStateAction<string>>) => {
     setState(event.target.value);
@@ -35,12 +35,7 @@ const Login: React.FC = () => {
           dispatch(userSlice.actions.setEmail(res.user.email));
           dispatch(userSlice.actions.setName(res.user.name));
 
-          localStorage.setItem('user', JSON.stringify({
-            _id: res.user._id,
-            email: res.user.email,
-            name: res.user.name
-          }));
-      } else if (res.error) {
+      } else {
         console.log(res.error); // Do something else here
       }
     }
