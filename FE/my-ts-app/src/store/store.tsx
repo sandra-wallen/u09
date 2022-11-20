@@ -1,44 +1,38 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import userSlice from "../reducers/user.reducer";
 import schedulesSlice from "../reducers/schedule.reducer";
+import storage from 'redux-persist/lib/storage';
+import { persistReducer, persistStore } from 'redux-persist';
+import thunk from 'redux-thunk';
 
-const key: string = "user";
-
-function loadState() {
-  try {
-    const serializedState = localStorage.getItem(key);
-
-    if (!serializedState) {
-      return undefined;
-    } else {
-      return JSON.parse(serializedState);
-    }
-  } catch (error) {
-    return undefined;
-  }
+const persistConfig = {
+  key: 'root',
+  storage,
+  throttle: 1000
 }
 
-async function saveState(state: any) {
-  try {
-    const serializedState = JSON.stringify(state);
-    localStorage.setItem(key, serializedState);
-  } catch (error) {
+const rootReducer = combineReducers({
+  user: userSlice.reducer,
+  schedules: schedulesSlice.reducer
+})
 
-  }
-}
+const persistedReducer = persistReducer(persistConfig, rootReducer)
 
-const reducer = combineReducers({
-  userSlice: userSlice.reducer,
-  schedulesSlice: schedulesSlice.reducer
-});
 
 export const store = configureStore({
-  reducer: reducer,
-  //preloadedState: loadState()
-});
+  reducer: persistedReducer,
+  devTools: process.env.NODE_ENV !== 'production',
+  middleware: [thunk]
+})
 
-// store.subscribe(() => {
-//   saveState(store.getState());
-// })
+export const persistor = persistStore(store);
 
-export type rootState = ReturnType<typeof reducer>;
+export const resetStore = () => {
+  persistor.pause();
+  persistor.flush().then(() => {
+    return persistor.purge();
+  });
+}
+
+export type RootState = ReturnType<typeof rootReducer>;
+

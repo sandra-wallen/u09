@@ -8,7 +8,8 @@ import Header from './components/header.component';
 import LandingPage from './pages/landing.page';
 import Profile from './pages/profile.page';
 import ScheduleList from './pages/scheduleList.page';
-import { store } from './store/store';
+import { store, persistor } from './store/store';
+import { PersistGate } from 'redux-persist/integration/react';
 
 
 function App() {
@@ -16,12 +17,14 @@ function App() {
     <div className="App">
         <BrowserRouter>
           <Provider store={store}>
-            <Header />
-            <Routes>
-              <Route path="/" element={<LandingPage />} />
-              <Route path="/profile" element={<Profile />} />
-              <Route path="/schedule-list" element={<ScheduleList />} />
-            </Routes>
+            <PersistGate persistor={persistor}>
+              <Header />
+              <Routes>
+                <Route path="/" element={<LandingPage />} />
+                <Route path="/profile" element={<Profile />} />
+                <Route path="/schedule-list" element={<ScheduleList />} />
+              </Routes>
+            </PersistGate>
           </Provider>
         </BrowserRouter>
     </div>

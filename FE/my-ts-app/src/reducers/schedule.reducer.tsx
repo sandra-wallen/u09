@@ -18,6 +18,9 @@ const schedulesSlice = createSlice({
     },
     updateSchedules: (store, action) => {
       store.schedules = [...store.schedules, action.payload];
+    },
+    deleteSchedule: (store, action) => {
+      store.schedules = action.payload;
     }
   }
 })

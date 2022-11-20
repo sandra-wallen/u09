@@ -1,11 +1,9 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-const localStorageUser: string | null = localStorage.getItem('user');
-
 const initialState = {
-  _id: localStorageUser !== null ? JSON.parse(localStorageUser)._id : '',
-  email: localStorageUser !== null ? JSON.parse(localStorageUser).email : '',
-  name: localStorageUser !== null ? JSON.parse(localStorageUser).name : ''
+  _id: '',
+  email: '',
+  name: ''
 }
 
 const userSlice = createSlice({
@@ -20,7 +18,12 @@ const userSlice = createSlice({
     },
     setName: (store, action: PayloadAction<string>) => {
       store.name = action.payload;
-    }
+    },
+    clearState: (store) => {
+      store._id = '';
+      store.email = '';
+      store.name = '';
+    },
   }
 })
 
