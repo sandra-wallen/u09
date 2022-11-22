@@ -82,7 +82,8 @@ const ScheduleList: React.FC = () => {
           </tr>
         </thead>
         <tbody>
-            {schedulesState.schedules.map((schedule: any, index: any) => (
+            {schedulesState.schedules && 
+              schedulesState.schedules.map((schedule: any, index: any) => (
               <ScheduleListItem schedule={schedule} index={index} />
             ))}
         </tbody>
