@@ -6,7 +6,6 @@ import userSlice from "../reducers/user.reducer";
 
 import { useAxios } from "../reusable/useAxios";
 import { resetStore, RootState } from "../store/store";
-import EditSchedule from "./editSchedule.component";
 
 interface Props {
   schedule: {
@@ -14,7 +13,7 @@ interface Props {
     ownerId: string,
     title: string,
     duration: number,
-    courses: Array<String>,
+    courses: Array<String> | [],
     createdAt: string,
     updatedAt: string, 
   };
@@ -53,7 +52,7 @@ const ScheduleListItem: React.FC<Props> = ({schedule, index}) => {
       <td>{schedule.duration} weeks</td>
       <td>{schedule.courses?.length}</td>
       <td>
-        <EditSchedule schedule={schedule} />
+        <Link className="btn btn-info" to={`/edit-schedule/${schedule._id}`}>Edit</Link>
       </td>
       <td>
         <button className="btn btn-danger" type="button" onClick={() => handleDelete(schedule._id)}>

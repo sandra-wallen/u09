@@ -10,6 +10,7 @@ import Profile from './pages/profile.page';
 import ScheduleList from './pages/scheduleList.page';
 import { store, persistor } from './store/store';
 import { PersistGate } from 'redux-persist/integration/react';
+import EditSchedule from './components/editSchedule.component';
 
 
 function App() {
@@ -23,6 +24,7 @@ function App() {
                 <Route path="/" element={<LandingPage />} />
                 <Route path="/profile" element={<Profile />} />
                 <Route path="/schedule-list" element={<ScheduleList />} />
+                <Route path="/edit-schedule/:scheduleId" element={<EditSchedule />} />
               </Routes>
             </PersistGate>
           </Provider>
