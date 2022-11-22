@@ -27,7 +27,7 @@ router.delete('/delete-schedule/:scheduleId', authorizeUser, deleteSchedule);
 
 //Course routes
 router.get('/courses', authorizeUser, getAllCourses);
-router.get('/courses/:scheduleId', authorizeUser, getAllCoursesAccociatedWithSchedule);
+router.get('/schedule/courses/:scheduleId', authorizeUser, getAllCoursesAccociatedWithSchedule);
 router.get('/course/:courseId', authorizeUser, getCourse);
 router.post('/create-course', authorizeUser, createCourse);
 router.patch('/update-course/:courseId', authorizeUser, updateCourse);
