@@ -2,7 +2,7 @@ import React from "react";
 
 import Navbar from "./navbar.component";
 
-const Header: React.FC = () => {
+const Header= () => {
   return (
     <header>
       <Navbar />

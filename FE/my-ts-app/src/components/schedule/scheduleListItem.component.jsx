@@ -1,28 +1,15 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import schedulesSlice from "../reducers/schedule.reducer";
-import userSlice from "../reducers/user.reducer";
+import schedulesSlice from "../../reducers/schedule.reducer";
+import userSlice from "../../reducers/user.reducer";
 
-import { useAxios } from "../reusable/useAxios";
-import { resetStore, RootState } from "../store/store";
+import { useAxios } from "../../reusable/useAxios";
+import { resetStore } from "../../store/store";
 
-interface Props {
-  schedule: {
-    _id: string,
-    ownerId: string,
-    title: string,
-    duration: number,
-    courses: Array<String> | [],
-    createdAt: string,
-    updatedAt: string, 
-  };
-  index: number;
-}
+const ScheduleListItem = ({schedule, index}) => {
 
-const ScheduleListItem: React.FC<Props> = ({schedule, index}) => {
-
-  const schedulesState = useSelector((store: RootState) => store.schedules);
+  const schedulesState = useSelector((store) => store.schedules);
   const { callbackAxios } = useAxios();
   const dispatch = useDispatch();
 

@@ -1,27 +1,24 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useAxios } from "../reusable/useAxios";
-import { resetStore, RootState } from "../store/store";
-import userSlice from "../reducers/user.reducer";
-import schedulesSlice from "../reducers/schedule.reducer";
+import { useAxios } from "../../reusable/useAxios";
+import { resetStore, RootState } from "../../store/store";
+import userSlice from "../../reducers/user.reducer";
+import schedulesSlice from "../../reducers/schedule.reducer";
 
-const CreateSchedule: React.FC = () => {
+const CreateSchedule = () => {
 
   const [title, setTitle] = useState('');
   const [duration, setDuration] = useState('');
 
   const dispatch = useDispatch();
   const { callbackAxios } = useAxios();
-  const userState = useSelector((store: RootState) => store.user);
+  const userState = useSelector((store) => store.user);
 
-  const handleInputChange = (
-    event: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLSelectElement>, 
-    setState: React.Dispatch<React.SetStateAction<string>>
-  ) => {
+  const handleInputChange = (event, setState) => {
     setState(event.target.value);
   }
 
-  const handleSubmit = async (event: React.SyntheticEvent) => {
+  const handleSubmit = async (event) => {
 
     const res = await callbackAxios('post', 'http://localhost:8000/create-schedule', { ownerId: userState._id, title, duration });
 

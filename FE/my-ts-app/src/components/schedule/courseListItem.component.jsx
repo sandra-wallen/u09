@@ -1,48 +1,23 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import schedulesSlice from "../reducers/schedule.reducer";
-import userSlice from "../reducers/user.reducer";
-import { useAxios } from "../reusable/useAxios";
-import { resetStore, RootState } from "../store/store";
-import { ScheduleInterface } from './editSchedule.component'
+import schedulesSlice from "../../reducers/schedule.reducer";
+import userSlice from "../../reducers/user.reducer";
+import { useAxios } from "../../reusable/useAxios";
+import { resetStore } from "../../store/store";
 
-interface CourseInterface {
-  _id: string;
-  ownerId: string;
-  title: string;
-  color?: string;
-  length: number;
-  createdAt: string;
-  updatedAt: string;
-}
 
-interface Props {
-  course: {
-    _id: string;
-    ownerId: string;
-    title: string;
-    color?: string;
-    length: number;
-    createdAt: string;
-    updatedAt: string;
-  },
-  index: number;
-  schedule: ScheduleInterface;
-  courses: Array<CourseInterface>;
-  setSchedule: React.Dispatch<React.SetStateAction<ScheduleInterface>>;
-  setCourses: React.Dispatch<React.SetStateAction<Array<Object>>>;
-}
+const CourseListItem = ({course, index, schedule, courses, setSchedule, setCourses}) => {
 
-const CourseListItem: React.FC<Props> = ({course, index, schedule, courses, setSchedule, setCourses}) => {
+  const scheduleCourse = schedule.courses.find(item => item.course === course._id)
 
   const { callbackAxios } = useAxios();
   const dispatch = useDispatch();
 
-  const schedulesState = useSelector((store: RootState) => store.schedules);
+  const schedulesState = useSelector((store) => store.schedules);
 
   const handleDeleteCourse = async (id) => {
-    const filteredCoursesInSchedule = schedule.courses.filter(course => course !== id);
+    const filteredCoursesInSchedule = schedule.courses.filter(item => item.course !== id);
 
     const res = await callbackAxios('patch', `http://localhost:8000/update-schedule/${schedule._id}`, { courses: filteredCoursesInSchedule });
 
@@ -54,7 +29,7 @@ const CourseListItem: React.FC<Props> = ({course, index, schedule, courses, setS
 
       dispatch(schedulesSlice.actions.setSchedules(updatedSchedulesList));
 
-      const filteredCoursesList = courses.filter(course => course._id !== id);
+      const filteredCoursesList = courses.filter(item => item._id !== id);
       setCourses(filteredCoursesList);
     } else {
       if (res.request.status === 403) {
@@ -71,6 +46,7 @@ const CourseListItem: React.FC<Props> = ({course, index, schedule, courses, setS
       <td>
         <Link to="/">{course.title}</Link>
       </td>
+      <td>{scheduleCourse.startDateTime.toLocaleString()}</td>
       <td>{course.length} min</td>
       <td>
         <button className="btn btn-danger" type="button" onClick={() => handleDeleteCourse(course._id)}>

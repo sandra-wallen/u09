@@ -7,13 +7,13 @@ import { useAxios } from "../reusable/useAxios";
 import schedulesSlice from "../reducers/schedule.reducer";
 import userSlice from "../reducers/user.reducer";
 
-import CreateSchedule from "../components/createSchedule.component";
-import ScheduleListItem from "../components/scheduleListItem.component";
+import CreateSchedule from "../components/schedule/createSchedule.component";
+import ScheduleListItem from "../components/schedule/scheduleListItem.component";
 
-const ScheduleList: React.FC = () => {
+const ScheduleList = () => {
 
-  const userState = useSelector((store: RootState) => store.user);
-  const schedulesState = useSelector((store: RootState) => store.schedules);
+  const userState = useSelector((store) => store.user);
+  const schedulesState = useSelector((store) => store.schedules);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -28,7 +28,6 @@ const ScheduleList: React.FC = () => {
 
     } else {
       // Do something else here
-      console.log(res.request)
       if (res.request.status === 403) {
         dispatch(schedulesSlice.actions.clearState());
         dispatch(userSlice.actions.clearState());
@@ -82,8 +81,8 @@ const ScheduleList: React.FC = () => {
           </tr>
         </thead>
         <tbody>
-            {schedulesState.schedules && 
-              schedulesState.schedules.map((schedule: any, index: any) => (
+            {schedulesState.schedules[0] !== null && 
+              schedulesState.schedules.map((schedule, index) => (
               <ScheduleListItem schedule={schedule} index={index} />
             ))}
         </tbody>

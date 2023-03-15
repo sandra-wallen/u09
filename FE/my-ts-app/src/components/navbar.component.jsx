@@ -3,13 +3,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import schedulesSlice from "../reducers/schedule.reducer";
 import userSlice from "../reducers/user.reducer";
-import { resetStore, RootState } from "../store/store";
+import { resetStore } from "../store/store";
 
-const Navbar: React.FC = () => {
+const Navbar = () => {
 
   const dispatch = useDispatch()
 
-  const userState = useSelector((store: RootState) => store.user)
+  const userState = useSelector((store) => store.user)
 
   const handleLogout = () => {
     dispatch(schedulesSlice.actions.clearState());

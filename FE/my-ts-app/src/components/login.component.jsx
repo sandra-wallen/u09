@@ -1,17 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from 'react-redux'
 import userSlice from "../reducers/user.reducer";
-import { RootState } from "../store/store";
 import { useNavigate } from "react-router-dom";
 import { useAxios } from "../reusable/useAxios";
 
 
-const Login: React.FC = () => {
+const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const { callbackAxios } = useAxios();
 
-  const userState = useSelector((store: RootState) => store.user)
+  const userState = useSelector((store) => store.user)
   const dispatch = useDispatch()
   const navigate = useNavigate();
 
@@ -21,11 +20,11 @@ const Login: React.FC = () => {
     }
   }, [userState._id])
 
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>, setState: React.Dispatch<React.SetStateAction<string>>) => {
+  const handleInputChange = (event, setState) => {
     setState(event.target.value);
   }
 
-  const handleSubmit = async (event: React.SyntheticEvent) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     if (callbackAxios !== undefined) {
       const res = await callbackAxios('post', 'http://localhost:8000/login', { email, password });

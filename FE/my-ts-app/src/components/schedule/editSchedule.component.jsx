@@ -1,30 +1,21 @@
 import React, { useEffect, useState } from "react"; 
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
-import schedulesSlice from "../reducers/schedule.reducer";
-import userSlice from "../reducers/user.reducer";
-import { useAxios } from "../reusable/useAxios";
-import { resetStore, RootState } from "../store/store";
+import schedulesSlice from "../../reducers/schedule.reducer";
+import userSlice from "../../reducers/user.reducer";
+import { useAxios } from "../../reusable/useAxios";
+import { resetStore } from "../../store/store";
+import AddCourse from "./addCourse.component";
 import CourseListItem from "./courseListItem.component";
 
-export interface ScheduleInterface {
-  _id: string;
-  ownerId: string;
-  title: string;
-  duration: number;
-  courses: Array<String> | [];
-  createdAt: string;
-  updatedAt: string;
-}
-
-const EditSchedule: React.FC = () => {
+const EditSchedule = () => {
   const { scheduleId } = useParams();
 
-  const [schedule, setSchedule] = useState<ScheduleInterface>();
+  const [schedule, setSchedule] = useState();
   const [courses, setCourses] = useState([]);
 
-  const userState = useSelector((store: RootState) => store.user);
-  const schedulesState = useSelector((store: RootState) => store.schedules);
+  const userState = useSelector((store) => store.user);
+  const schedulesState = useSelector((store) => store.schedules);
   console.log(schedulesState.schedules);
 
   const dispatch = useDispatch();
@@ -69,15 +60,14 @@ const EditSchedule: React.FC = () => {
   }, [userState._id])
 
 
-  const handleInputChange = (
-    event: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLSelectElement>) => {
+  const handleInputChange = (event) => {
     setSchedule({
       ...schedule,
       [event.target.name]: event.target.value
     });
   }
 
-  const handleSubmit = async (event: React.SyntheticEvent) => {
+  const handleSubmit = async (event) => {
 
     const res = await callbackAxios('patch', `http://localhost:8000/update-schedule/${schedule._id}`);
 
@@ -103,9 +93,9 @@ const EditSchedule: React.FC = () => {
       {schedule && (
         <>
           <h1>{schedule.title}</h1>
-          <div className="row gx-2 my-4">
-            <form>
-              <div className="col-12 col-md-6 d-flex flex-column">
+          <form>
+            <div className="row gx-2 my-4">
+              <div className="col-12 col-md-6 p-2">
                 <div className="d-flex flex-column align-items-start mb-3">
                   <label htmlFor="inputTitle" className="form-label">Title</label>
                   <input type="text" id="inputTitle" name="title" className="form-control" placeholder="Title" value={schedule.title} onChange={handleInputChange}/>
@@ -125,31 +115,36 @@ const EditSchedule: React.FC = () => {
                   </select>
                 </div>
               </div>
-              <table className="col-12 col-md-6">
-                <thead>
-                  <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Title</th>
-                    <th style={{width: "20%"}} scope="col">Length</th>
-                    <th style={{width: "20%"}} scope="col"></th>
-                  </tr>
-                </thead>
-                <tbody>
-                    {courses && 
-                      courses.map((course: any, index: any) => (
-                        <CourseListItem 
-                          course={course} 
-                          index={index} 
-                          schedule={schedule} 
-                          courses={courses} 
-                          setSchedule={setSchedule} 
-                          setCourses={setCourses} 
-                        />
-                    ))}
-                </tbody>
-              </table>
-            </form>
-          </div>
+              <div className="col-12 col-md-6 p-2">
+                <h2 className="text-start">Courses</h2>
+                  <AddCourse />
+                <table>
+                  <thead>
+                    <tr>
+                      <th scope="col">#</th>
+                      <th scope="col">Title</th>
+                      <th scope="col">Start date & time</th>
+                      <th style={{width: "20%"}} scope="col">Length</th>
+                      <th style={{width: "20%"}} scope="col"></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                      {courses && 
+                        courses.map((course, index) => (
+                          <CourseListItem 
+                            course={course} 
+                            index={index} 
+                            schedule={schedule} 
+                            courses={courses} 
+                            setSchedule={setSchedule} 
+                            setCourses={setCourses} 
+                          />
+                      ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </form>
         </>
       )}
     </main>

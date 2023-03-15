@@ -1,7 +1,7 @@
 import React from "react";
 import Login from "../components/login.component";
 
-const LandingPage: React.FC = () => {
+const LandingPage = () => {
   return (
     <Login />
   )
