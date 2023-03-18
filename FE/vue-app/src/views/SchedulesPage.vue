@@ -1,7 +1,7 @@
 <template>
 	<main className="d-flex flex-column mb-3 px-4">
 
-		<!-- <CreateSchedule /> -->
+		<CreateSchedule />
 
 		<table className="table .container-sm">
 		<thead>
@@ -15,7 +15,7 @@
 			</tr>
 		</thead>
 		<tbody>
-			<tr v-for="(schedule, index) in schedulesStore.model.schedules" :key="index">
+			<tr v-for="(schedule, index) in schedulesStore.model.schedules" :key="schedule._id">
 				<th scope="row">{{index + 1}}</th>
 				<td>
 					<RouterLink to="/">{{schedule.title}}</RouterLink>
@@ -25,8 +25,7 @@
 				<td>
 					<RouterLink
 						class="btn btn-info"
-						:to="`/edit-schedule/${schedule._id}`"
-					>
+						:to="`/edit-schedule/${schedule._id}`">
 						Edit
 					</RouterLink>
 				</td>
@@ -34,7 +33,7 @@
 					<button
 						class="btn btn-danger"
 						type="button"
-						@click="() => handleDelete(schedule._id)"
+						@click="handleDelete(schedule._id)"
 					>
 						Delete
 					</button>
@@ -46,12 +45,17 @@
 </template>
 
 <script setup>
+	import { onMounted } from 'vue';
 	import { useSchedulesStore } from '@/stores/SchedulesStore';
-import { onMounted } from 'vue';
+	import CreateSchedule from '@/components/CreateSchedule';
 
 	const schedulesStore = useSchedulesStore()
 
 	onMounted(() => {
 		schedulesStore.getSchedules()
 	})
+
+	const handleDelete = (id) => {
+		schedulesStore.deleteSchedule(id)
+	}
 </script>

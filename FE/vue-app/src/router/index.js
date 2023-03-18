@@ -3,6 +3,7 @@ import HomePage from "../views/HomePage";
 import LandingPage from "../views/LandingPage";
 import ProfilePage from "../views/ProfilePage";
 import SchedulesPage from "../views/SchedulesPage";
+import EditSchedulePage from "../views/EditSchedulePage";
 
 const routes = [
 	{
@@ -24,6 +25,11 @@ const routes = [
 		path: "/schedules",
 		name: "schedules",
 		component: SchedulesPage,
+	},
+	{
+		path: "/edit-schedule/:id",
+		name: "edit-schedule",
+		component: EditSchedulePage,
 	},
 ];
 
