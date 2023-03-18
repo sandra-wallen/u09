@@ -1,4 +1,5 @@
 <template>
+	<Notifications position="top center" pauseOnHover />
 	<NavBar />
 	<router-view />
 </template>
