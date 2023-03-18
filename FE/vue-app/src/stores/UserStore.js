@@ -25,11 +25,9 @@ export const useUserStore = defineStore("user", () => {
 				body: JSON.stringify(user),
 			});
 
-			if (response.success) {
-				const data = await response.json();
-				model.user = data.user;
-				model.sessionExpiration = data.expires;
-			}
+			const data = await response.json();
+			model.user = data.user;
+			model.sessionExpiration = data.expires;
 		} catch (error) {
 			console.log(error);
 		}
