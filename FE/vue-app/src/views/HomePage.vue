@@ -1,14 +1,14 @@
 <template>
-  <div class="home">
+  <main class="home">
     <h1>HOME</h1>
-  </div>
+  </main>
 </template>
 
 <script setup>
   import { reactive } from "vue";
 
   const model = reactive({
-    
+
   })
 
 </script>
