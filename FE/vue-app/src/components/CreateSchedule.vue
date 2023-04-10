@@ -5,9 +5,9 @@
 		data-bs-target="#newScheduleModal">
 		NEW
 	</button>
-	<ReusableModal modalHeading="New schedule" customId="newScheduleModal">
-		<form>
-			<div class="mb-3">
+	<ReusableModal ref="createScheduleModal" modalHeading="New schedule" customId="newScheduleModal">
+		<form class="text-start">
+			<div class="mb-3 d-flex flex-column align-items-start">
 				<label
 					for="inputTitle"
 					class="form-label">
@@ -20,7 +20,7 @@
 					placeholder="Title"
 					v-model="model.schedule.title"/>
 			</div>
-			<div class="mb-3">
+			<div class="d-flex flex-column align-items-start">
 				<label
 					for="inputDuration"
 					class="form-label">
@@ -45,21 +45,24 @@
 				</select>
 			</div>
 
-			<div class="d-flex justify-content-end">
+			<div class="d-flex justify-content-end form-btns">
 				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-				Cancel
-			</button>
-			<button type="button" class="btn btn-primary ms-1" @click="handleSubmit">
-				Create
-			</button>
+					Cancel
+				</button>
+				<button type="button" class="btn btn-primary ms-3" @click="handleSubmit">
+					Create
+				</button>
 			</div>
 		</form>
 	</ReusableModal>
 </template>
 
 <script setup>
-	import { reactive } from "vue";
+	import { reactive, ref } from "vue";
+	import { useSchedulesStore } from "@/stores/SchedulesStore";
 	import ReusableModal from "./ReusableModal"
+
+	const scheduleStore = useSchedulesStore()
 
 	const model = reactive({
 		schedule: {
@@ -68,4 +71,21 @@
 		}
 	})
 
+	const createScheduleModal = ref(null);
+
+	const handleSubmit = async () => {
+		const response = await scheduleStore.createSchedule(model.schedule.title, model.schedule.duration)
+		if (response) {
+			createScheduleModal.value.modal.hide()
+			//const backdrop = document.getElementsByClassName('modal-backdrop fade show')
+			//console.log(backdrop)
+			//backdrop.remove()
+		}
+	}
+
 </script>
+<style scoped lang="scss">
+	.form-btns {
+		margin-top: 3rem;
+	}
+</style>
