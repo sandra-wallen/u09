@@ -4,6 +4,7 @@ import LandingPage from "../views/LandingPage";
 import ProfilePage from "../views/ProfilePage";
 import SchedulesPage from "../views/SchedulesPage";
 import EditSchedulePage from "../views/EditSchedulePage";
+import {useUserStore} from "@/stores/UserStore";
 
 const routes = [
 	{
@@ -37,5 +38,16 @@ const router = createRouter({
 	history: createWebHistory(process.env.BASE_URL),
 	routes,
 });
+
+router.beforeEach((to, from) => {
+	const userStore = useUserStore()
+	const sessionExists = userStore.sessionExists()
+	//to.path !== "/login" && next()
+	if (to.path !== "/login" && !sessionExists) {
+		router.push({ path: "/login" })
+	} else if (to.path === "/login" && sessionExists) {
+		router.push({ path: "/schedules" })
+	}
+})
 
 export default router;
