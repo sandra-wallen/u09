@@ -1,22 +1,20 @@
 <template>
-	<main className="d-flex flex-column mb-3 px-4">
+	<main class="d-flex flex-column mb-3 px-5">
+		<i class="fa-regular fa-pen-to-square"></i>
 
 		<CreateSchedule />
 
-		<table className="table .container-sm">
+		<table class="table container-sm">
 		<thead>
-			<tr>
-			<th scope="col">#</th>
-			<th scope="col">Title</th>
-			<th style="width: 9%" scope="col">Duration</th>
-			<th style="width: 9%" scope="col">Courses</th>
-			<th style="width: 9%" scope="col"></th>
-			<th style="width: 9%" scope="col"></th>
+			<tr class="text-start text-20">
+				<th style="width: 20%" scope="col">Title</th>
+				<th style="width: 9%" scope="col">Duration</th>
+				<th style="width: 9%" scope="col">Courses</th>
+				<th style="width: 9%" scope="col"></th>
 			</tr>
 		</thead>
-		<tbody>
-			<tr v-for="(schedule, index) in schedulesStore.model.schedules" :key="schedule._id">
-				<th scope="row">{{index + 1}}</th>
+		<tbody class="text-18">
+			<tr v-for="(schedule) in schedulesStore.model.schedules" class="text-start" :key="schedule._id">
 				<td>
 					<RouterLink to="/">{{schedule.title}}</RouterLink>
 				</td>
@@ -24,18 +22,15 @@
 				<td>{{schedule.courses?.length}}</td>
 				<td>
 					<RouterLink
-						class="btn btn-info"
+						class="me-3"
 						:to="`/edit-schedule/${schedule._id}`">
-						Edit
+						<font-awesome-icon icon="fa-regular fa-pen-to-square" />
 					</RouterLink>
-				</td>
-				<td>
 					<button
-						class="btn btn-danger"
+						class="delete-btn"
 						type="button"
-						@click="handleDelete(schedule._id)"
-					>
-						Delete
+						@click="handleDelete(schedule._id)">
+						<font-awesome-icon icon="fa-regular fa-trash-alt" class="danger"/>
 					</button>
 				</td>
 			</tr>
@@ -48,6 +43,7 @@
 	import { onMounted } from 'vue';
 	import { useSchedulesStore } from '@/stores/SchedulesStore';
 	import CreateSchedule from '@/components/CreateSchedule';
+	import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
 
 	const schedulesStore = useSchedulesStore()
 
@@ -59,3 +55,19 @@
 		schedulesStore.deleteSchedule(id)
 	}
 </script>
+<style scoped lang="scss">
+	@import "@/styles/index";
+
+	thead {
+		color: $dark-gray;
+	}
+
+	tbody {
+		color: $black;
+	}
+
+	.delete-btn {
+		border: none;
+		background: transparent;
+	}
+</style>
