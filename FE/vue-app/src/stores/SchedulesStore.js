@@ -1,3 +1,4 @@
+import axios from "axios";
 import { defineStore } from "pinia";
 import { reactive, computed } from "vue";
 import { useNotification } from "@kyvg/vue3-notification";
@@ -14,15 +15,16 @@ export const useSchedulesStore = defineStore("schedules", () => {
 
 	const getSchedules = async () => {
 		try {
-			const response = await fetch("http://localhost:8000/schedules", {
-				method: "GET",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				credentials: "include",
-			});
-			const data = await response.json();
-			model.schedules = data.schedules;
+			const response = await axios.get(
+				"http://localhost:8000/schedules",
+				{
+					headers: { "Content-Type": "application/json" },
+					withCredentials: true,
+				}
+			);
+
+			console.log(response.data);
+			model.schedules = response.data.schedules;
 		} catch (error) {
 			notify({
 				title: "Something went wrong",
