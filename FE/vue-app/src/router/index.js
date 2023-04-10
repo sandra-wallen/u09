@@ -5,6 +5,7 @@ import ProfilePage from "../views/ProfilePage";
 import SchedulesPage from "../views/SchedulesPage";
 import EditSchedulePage from "../views/EditSchedulePage";
 import {useUserStore} from "@/stores/UserStore";
+import CoursesPage from "@/views/CoursesPage.vue";
 
 const routes = [
 	{
@@ -32,6 +33,11 @@ const routes = [
 		name: "edit-schedule",
 		component: EditSchedulePage,
 	},
+	{
+		path: "/courses",
+		name: "courses",
+		component: CoursesPage
+	}
 ];
 
 const router = createRouter({
@@ -41,7 +47,7 @@ const router = createRouter({
 
 router.beforeEach((to, from) => {
 	const userStore = useUserStore()
-	const sessionExists = userStore.sessionExists()
+	const sessionExists = userStore.sessionExists
 	//to.path !== "/login" && next()
 	if (to.path !== "/login" && !sessionExists) {
 		router.push({ path: "/login" })
