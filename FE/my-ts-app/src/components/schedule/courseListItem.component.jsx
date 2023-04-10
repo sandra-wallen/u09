@@ -6,55 +6,79 @@ import userSlice from "../../reducers/user.reducer";
 import { useAxios } from "../../reusable/useAxios";
 import { resetStore } from "../../store/store";
 
+const CourseListItem = ({
+    course,
+    index,
+    schedule,
+    courses,
+    setSchedule,
+    setCourses,
+}) => {
+    const scheduleCourse = schedule.courses.find(
+        (item) => item.course === course._id
+    );
 
-const CourseListItem = ({course, index, schedule, courses, setSchedule, setCourses}) => {
+    const { callbackAxios } = useAxios();
+    const dispatch = useDispatch();
 
-  const scheduleCourse = schedule.courses.find(item => item.course === course._id)
+    const schedulesState = useSelector((store) => store.schedules);
 
-  const { callbackAxios } = useAxios();
-  const dispatch = useDispatch();
+    const handleDeleteCourse = async (id) => {
+        const filteredCoursesInSchedule = schedule.courses.filter(
+            (item) => item.course !== id
+        );
 
-  const schedulesState = useSelector((store) => store.schedules);
+        const res = await callbackAxios(
+            "patch",
+            `http://localhost:8000/update-schedule/${schedule._id}`,
+            { courses: filteredCoursesInSchedule }
+        );
 
-  const handleDeleteCourse = async (id) => {
-    const filteredCoursesInSchedule = schedule.courses.filter(item => item.course !== id);
+        if (res.success) {
+            setSchedule(res.updatedSchedule);
 
-    const res = await callbackAxios('patch', `http://localhost:8000/update-schedule/${schedule._id}`, { courses: filteredCoursesInSchedule });
+            const filteredSchedulesList = schedulesState.schedules.filter(
+                (item) => item._id !== schedule._id
+            );
+            const updatedSchedulesList = [
+                ...filteredSchedulesList,
+                res.updatedSchedule,
+            ];
 
-    if (res.success) {
-      setSchedule(res.updatedSchedule)
+            dispatch(schedulesSlice.actions.setSchedules(updatedSchedulesList));
 
-      const filteredSchedulesList = schedulesState.schedules.filter(item => item._id !== schedule._id);
-      const updatedSchedulesList = [...filteredSchedulesList, res.updatedSchedule];
+            const filteredCoursesList = courses.filter(
+                (item) => item._id !== id
+            );
+            setCourses(filteredCoursesList);
+        } else {
+            if (res.request.status === 403) {
+                dispatch(schedulesSlice.actions.clearState());
+                dispatch(userSlice.actions.clearState());
+                resetStore();
+            }
+        }
+    };
 
-      dispatch(schedulesSlice.actions.setSchedules(updatedSchedulesList));
+    return (
+        <tr>
+            <th scope="row">{index + 1}</th>
+            <td>
+                <Link to="/">{course.title}</Link>
+            </td>
+            <td>{scheduleCourse.startDateTime.toLocaleString()}</td>
+            <td>{course.length} min</td>
+            <td>
+                <button
+                    className="btn btn-danger"
+                    type="button"
+                    onClick={() => handleDeleteCourse(course._id)}
+                >
+                    Delete
+                </button>
+            </td>
+        </tr>
+    );
+};
 
-      const filteredCoursesList = courses.filter(item => item._id !== id);
-      setCourses(filteredCoursesList);
-    } else {
-      if (res.request.status === 403) {
-        dispatch(schedulesSlice.actions.clearState());
-        dispatch(userSlice.actions.clearState());
-        resetStore();
-      }
-    }
-  }
-
-  return (
-    <tr>
-      <th scope="row">{index + 1}</th>
-      <td>
-        <Link to="/">{course.title}</Link>
-      </td>
-      <td>{scheduleCourse.startDateTime.toLocaleString()}</td>
-      <td>{course.length} min</td>
-      <td>
-        <button className="btn btn-danger" type="button" onClick={() => handleDeleteCourse(course._id)}>
-          Delete
-        </button>
-      </td>
-    </tr>
-  )
-}
-
-export default CourseListItem
+export default CourseListItem;
