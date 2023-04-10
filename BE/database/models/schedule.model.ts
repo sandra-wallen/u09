@@ -1,15 +1,33 @@
 import { ObjectId } from 'mongodb';
 import mongoose, { Schema, Types } from "mongoose";
 
-import { CourseInterface, CourseSchema } from './course.model';
+interface CoursesItem {
+  course: ObjectId;
+  startDateTime: string;
+}
 
 interface ScheduleInterface {
   _id: ObjectId;
   ownerId: ObjectId;
   title: string;
   duration: number;
-  courses: Types.Array<ObjectId>;
+  courses: Types.Array<CoursesItem>;
 }
+
+const CoursesItemSchema = new Schema<CoursesItem>(
+  {
+    course: {
+      type: ObjectId,
+      unique: false,
+      required: true
+    },
+    startDateTime: {
+      type: String,
+      unique: false,
+      required: true
+    }
+  }
+)
 
 const ScheduleSchema = new Schema<ScheduleInterface>(
   {
@@ -29,7 +47,7 @@ const ScheduleSchema = new Schema<ScheduleInterface>(
       required: true
     },
     courses: {
-      type: [ObjectId],
+      type: [CoursesItemSchema],
       required: false
     }
   },
