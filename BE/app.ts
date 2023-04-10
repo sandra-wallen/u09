@@ -1,11 +1,11 @@
-import { config } from 'dotenv';
+import { config } from "dotenv";
 config();
 
-import express from 'express';
-import cookieParser from 'cookie-parser';
-import listEndpoints from 'express-list-endpoints';
+import express from "express";
+import cookieParser from "cookie-parser";
+import listEndpoints from "express-list-endpoints";
 
-import { dbConnection } from './database/connection';
+import { dbConnection } from "./database/connection";
 import router from "./routes/router";
 
 const app = express();
@@ -17,13 +17,12 @@ app.use(express.json());
 app.use(cookieParser());
 app.use("/", router);
 
-app.get('/', (req, res) => {
-  res.send(listEndpoints(app))
+app.get("/", (req, res) => {
+    res.send(listEndpoints(app));
 });
 
-
 app.listen(port, () => {
-  console.log(`http://localhost:${port}`);
+    console.log(`http://localhost:${port}`);
 });
 
 dbConnection(connectionString);

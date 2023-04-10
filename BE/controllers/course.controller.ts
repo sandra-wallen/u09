@@ -39,7 +39,7 @@ const getAllCoursesAccociatedWithSchedule = async (req: Request, res: Response) 
         // resulting in the function returning too early.
         const coursesArray = []
           for (const item of schedule.courses) {
-            const course = await Course.findById(item);
+            const course = await Course.findById(item.course);
             coursesArray.push(course);
           }
 
