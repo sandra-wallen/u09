@@ -7,6 +7,7 @@ import {
 	removeLocalStorageItem,
 	setLocalStorageItem
 } from "@/helpers/localStorage";
+import { useStorage } from '@vueuse/core'
 import router from "../router/index";
 
 const localStorage = {
@@ -18,19 +19,19 @@ const localStorage = {
 
 export const useUserStore = defineStore("user", () => {
 	const model = reactive({
-		user: {
+		user: useStorage('user', {
 			_id: "",
 			email: "",
-			name: "",
-		},
-		sessionExpiration: null,
+			name: ""
+		}),
+		sessionExpiration: useStorage('sessionExpiration', {
+			expires: null
+		})
 	});
 
-	const sessionExists = () => {
-		return localStorage.getItem('sessionExpiration') ?
-			new Date(localStorage.getItem('sessionExpiration')) > new Date()
-			: false;
-	};
+	const sessionExists = computed(() => {
+		return new Date(model.sessionExpiration.expires) > new Date()
+	});
 
 	const loginUser = async (user) => {
 		try {
@@ -44,9 +45,9 @@ export const useUserStore = defineStore("user", () => {
 			);
 
 			model.user = response.data.user;
-			model.sessionExpiration = response.data.expires;
-			localStorage.setItem('user', response.data.user)
-			localStorage.setItem('sessionExpiration', response.data.expires)
+			model.sessionExpiration.expires = response.data.expires;
+			//localStorage.setItem('user', response.data.user)
+			//localStorage.setItem('sessionExpiration', response.data.expires)
 			router.push({ path: "/schedules" })
 		} catch (error) {
 			// TODO: Error handling
@@ -55,12 +56,19 @@ export const useUserStore = defineStore("user", () => {
 	};
 
 	const logoutUser = async () => {
-		model.user._id = "";
-		model.user.email = "";
-		model.user.name = "";
-		model.sessionExpiration = null;
-		localStorage.removeItem('user')
-		localStorage.removeItem('sessionExpiration')
+		model.user = {
+			_id: "",
+			email: "",
+			name: ""
+		}
+
+		// model.user._id = "";
+		// model.user.email = "";
+		// model.user.name = "";
+		model.sessionExpiration.expires = null;
+		// localStorage.removeItem('user')
+		// localStorage.removeItem('sessionExpiration')
+		router.push({ path: "/login" })
 	}
 
 	return { model, sessionExists, loginUser, logoutUser };
