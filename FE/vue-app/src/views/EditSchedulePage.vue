@@ -1,53 +1,54 @@
 <template>
-	<main>
-		<form class="d-flex flex-column justify-content-between">
+	<main class="d-flex flex-column justify-content-between">
 			<div class="row gx-2 my-4 schedule-wrapper justify-content-start">
 				<div class="col-12 mb-4">
 					<h1 class="text-start">{{ schedulesStore.model.schedule.title }}</h1>
 				</div>
 				<div class="col-12 col-md-5 p-2 pe-5">
-					<div class="d-flex flex-column align-items-start mb-3">
-						<label
-							for="inputTitle"
-							class="form-label">
-							Schedule title
-						</label>
-						<input
-							type="text"
-							id="inputTitle"
-							class="form-control"
-							placeholder="Title"
-							v-model="schedulesStore.model.schedule.title"/>
-					</div>
-					<div class="d-flex flex-column align-items-start mb-3">
-						<label
-							for="inputDuration"
-							class="form-label">
-							Duration
-						</label>
-						<select
-							id="inputDuration"
-							class="form-select"
-							aria-label="Input duration"
-							v-model="schedulesStore.model.schedule.duration">
-							<option disabled value="">
-								Duration in weeks
-							</option>
-							<option value="1">1</option>
-							<option value="2">2</option>
-							<option value="3">3</option>
-							<option value="4">4</option>
-							<option value="5">5</option>
-							<option value="6">6</option>
-							<option value="7">7</option>
-							<option value="8">8</option>
-						</select>
-					</div>
-					<div class="d-flex justify-content-end">
-						<button type="button" class="btn btn-primary ms-3" @click="handleSubmit">
-							Save
-						</button>
-					</div>
+					<form>
+						<div class="d-flex flex-column align-items-start mb-3">
+							<label
+								for="inputTitle"
+								class="form-label">
+								Schedule title
+							</label>
+							<input
+								type="text"
+								id="inputTitle"
+								class="form-control"
+								placeholder="Title"
+								v-model="schedulesStore.model.schedule.title"/>
+						</div>
+						<div class="d-flex flex-column align-items-start mb-3">
+							<label
+								for="inputDuration"
+								class="form-label">
+								Duration
+							</label>
+							<select
+								id="inputDuration"
+								class="form-select"
+								aria-label="Input duration"
+								v-model="schedulesStore.model.schedule.duration">
+								<option disabled value="">
+									Duration in weeks
+								</option>
+								<option value="1">1</option>
+								<option value="2">2</option>
+								<option value="3">3</option>
+								<option value="4">4</option>
+								<option value="5">5</option>
+								<option value="6">6</option>
+								<option value="7">7</option>
+								<option value="8">8</option>
+							</select>
+						</div>
+						<div class="d-flex justify-content-end">
+							<button type="button" class="btn btn-primary ms-3" @click="handleSubmit">
+								Save
+							</button>
+						</div>
+					</form>
 				</div>
 				<div class="col-12 col-md-7 p-2">
 					<div class="row gx-0">
@@ -91,7 +92,7 @@
 					Back
 				</button>
 			</div>
-		</form>
+
 	</main>
 </template>
 
@@ -176,7 +177,7 @@
 <style scoped lang="scss">
 	@import "@/styles/index";
 
-	form {
+	main {
 		min-height: 70vh;
 	}
 
