@@ -43,6 +43,11 @@
 							<option value="8">8</option>
 						</select>
 					</div>
+					<div class="d-flex justify-content-end">
+						<button type="button" class="btn btn-primary ms-3" @click="handleSubmit">
+							Save
+						</button>
+					</div>
 				</div>
 				<div class="col-12 col-md-7 p-2">
 					<div class="row gx-0">
@@ -81,12 +86,9 @@
 					</div>
 				</div>
 			</div>
-			<div class="d-flex justify-content-end align-items-end">
-				<button type="button" class="btn btn-secondary" @click="closeModal">
+			<div class="d-flex justify-content-start align-items-end">
+				<button type="button" class="btn btn-secondary" @click="goBack">
 					Back
-				</button>
-				<button type="button" class="btn btn-primary ms-3" @click="handleSubmit">
-					Save
 				</button>
 			</div>
 		</form>
@@ -95,7 +97,7 @@
 
 <script setup>
 	import { onMounted, ref, watch } from "vue";
-	import { useRoute } from "vue-router";
+	import { useRoute, useRouter } from "vue-router";
 	import { useSchedulesStore } from "../stores/SchedulesStore";
 	import { useCoursesStore } from "../stores/CoursesStore"
 	import AddCourse from "@/components/AddCourse";
@@ -107,6 +109,7 @@
 	const coursesStore  = useCoursesStore()
 
 	const route = useRoute()
+	const router = useRouter()
 
 	const id = route.params.id;
 
@@ -152,6 +155,16 @@
 				}
 			})
 		})
+	}
+
+	const handleSubmit = () => {
+		if (schedulesStore.model.schedule.title !== "" && schedulesStore.model.schedule.duration) {
+			schedulesStore.updateSchedule(id, schedulesStore.model.schedule.title, schedulesStore.model.schedule.duration)
+		}
+	}
+
+	const goBack = () => {
+		router.back();
 	}
 
 	watch(() => schedulesStore.model.schedule.courses, (currValue, prevValue) => {
