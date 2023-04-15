@@ -6,14 +6,15 @@
 	</button>
 	<ReusableModal :modal-active="modalActive" modal-heading="Add course" @close="closeModal">
 		<form>
-			<div class="text-16">
+			<div class="text-16 mt-3 mb-4">
+				<p class="form-label text-start">Start date & time</p>
 				<VueDatePicker v-model="model.course.startDateTime"
 							   enable-time-picker
 							   :min-date="new Date()"
 							   :start-date="new Date()"
 							   week-numbers/>
 			</div>
-			<div class="row gx-0">
+			<div class="row gx-0 mb-3">
 				<label for="course-search-input" class="form-label text-start">Course</label>
 				<div class="col-9">
 					<input id="course-search-input"
@@ -132,7 +133,7 @@ const handleSubmit = () => {
 	}
 
 	.search-btn {
-		padding: 0.6rem 0.8rem;
+		padding: 0.5rem 1.4rem;
 	}
 
 	//:deep(.search-suggestions) {
