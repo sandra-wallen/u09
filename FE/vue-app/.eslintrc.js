@@ -13,5 +13,6 @@ module.exports = {
 		"prettier/prettier": 0,
 		"no-unused-vars": "warn",
 		"no-mixed-spaces-and-tabs": "warn",
+		"no-useless-escape": "warn"
 	},
 };
