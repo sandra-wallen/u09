@@ -44,13 +44,8 @@ html {
 		color: $white;
 		border: 2px solid $rose;
 
-		&:active {
+		&:active, &:hover {
 			background-color: $rose-dark !important;
-			border-color: $rose-dark !important;
-		}
-
-		&:hover {
-			background-color: $rose-dark;
 			border-color: $rose-dark !important;
 		}
 	}
@@ -60,14 +55,10 @@ html {
 		color: $dark-gray;
 		border: 2px solid $rose;
 
-		&:active {
-			background-color: $light-gray !important;
-			border-color: $light-gray !important;
-		}
-
-		&:hover {
-			background-color: $light-gray;
-			border-color: $light-gray !important;
+		&:active, &:hover {
+			background-color: $red !important;
+			border-color: $red !important;
+			color: $white;
 		}
 	}
 
