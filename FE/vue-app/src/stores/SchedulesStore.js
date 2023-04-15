@@ -63,6 +63,32 @@ export const useSchedulesStore = defineStore("schedules", () => {
 		}
 	}
 
+	const updateSchedule = async (id, title, duration) => {
+		try {
+			const response = await fetch(
+				`http://localhost:8000/update-schedule/${id}`,
+				{
+					method: "PATCH",
+					headers: {
+						"Content-Type": "application/json",
+					},
+					credentials: "include",
+					body: JSON.stringify({ title, duration }),
+				}
+			);
+
+			console.log(response);
+			const data = await response.json();
+			console.log(data);
+			if (data.success) {
+				model.schedule = data.updatedSchedule;
+				return true;
+			}
+		} catch (error) {
+			console.log(error)
+		}
+	}
+
 	const deleteSchedule = async (id) => {
 		try {
 			const response = await fetch(
@@ -116,5 +142,5 @@ export const useSchedulesStore = defineStore("schedules", () => {
 		}
 	};
 
-	return { model, getSchedules, createSchedule, deleteSchedule, getSchedule };
+	return { model, getSchedules, createSchedule, updateSchedule, deleteSchedule, getSchedule };
 });
