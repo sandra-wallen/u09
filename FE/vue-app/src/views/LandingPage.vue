@@ -11,3 +11,6 @@
 	const register = ref(false);
 
 </script>
+
+<style scoped lang="scss">
+</style>
