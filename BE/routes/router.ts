@@ -2,8 +2,9 @@ import { Router } from "express";
 import cors, { CorsOptions } from "cors";
 import {
     authorizeUser,
-    loginUser,
+    loginUser, logoutUser,
     registerUser,
+    updatePassword
 } from "../controllers/user.controller";
 import {
     createSchedule,
@@ -34,6 +35,10 @@ router.use(cors(corsOptions));
 // Public routes
 router.post("/register", registerUser);
 router.post("/login", loginUser);
+
+// User routes
+router.patch("/update-password", authorizeUser, updatePassword);
+router.post("/logout", authorizeUser, logoutUser);
 
 // Schedule routes
 router.get("/schedules", authorizeUser, getAllSchedules);

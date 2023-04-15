@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import User from "../database/models/user.model";
 import jwt from "jsonwebtoken";
+import bcrypt from 'bcrypt';
 
 const registerUser = async (req: Request, res: Response) => {
     try {
@@ -69,6 +70,47 @@ const loginUser = async (req: Request, res: Response) => {
     }
 };
 
+const updatePassword = async (req: Request, res: Response)=> {
+    const { currentPassword, newPassword, id } = req.body;
+
+    if (!currentPassword || !newPassword) {
+        return res
+            .status(400)
+            .json("Please provide current password and new password");
+    } else {
+        try {
+            const user: any | null = await User.findById(id).select(
+                "+password"
+            );
+
+            const isMatch: boolean = await user.comparePassword(currentPassword);
+            if (!isMatch) {
+                return res.status(401).json("Invalid current password");
+            } else {
+                const salt = await bcrypt.genSalt(10);
+                const hashedPassword = await bcrypt.hashSync(newPassword, salt)
+                
+                const updatedUser = await User.findByIdAndUpdate(id, { password: hashedPassword })
+                
+                if (updatedUser) {
+                    return res.status(200).json({
+                        success: true
+                    })
+                } else {
+                    return res.status(404).json({
+                        success: false,
+                        message: "Could not update password",
+                    });
+                }
+                
+            }
+
+        } catch (error: any) {
+            return res.status(500).json(error.message);
+        }
+    }
+}
+
 const logoutUser = async (req: Request, res: Response) => {
     return res
         .clearCookie("access_token", {
@@ -126,4 +168,4 @@ const authorizeUser = (req: Request, res: Response, next: any) => {
     }
 };
 
-export { registerUser, loginUser, logoutUser, getUser, authorizeUser };
+export { registerUser, loginUser, updatePassword, logoutUser, getUser, authorizeUser };
