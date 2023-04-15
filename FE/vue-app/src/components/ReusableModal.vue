@@ -41,7 +41,7 @@ const emit = defineEmits(['close'])
 	position: fixed;
 	top: 0;
 	left: 0;
-	background-color: rgb(255, 255, 255, 0.7);
+	background-color: rgba(0, 0, 0, .5);
 
 	.modal-inner {
 		position: relative;
@@ -49,7 +49,6 @@ const emit = defineEmits(['close'])
 		width: 80%;
 		box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
 		background-color: $light-rose;
-		border: 2px solid $rose;
 		border-radius: 10px;
 
 		.custom-modal-header {
