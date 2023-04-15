@@ -10,13 +10,6 @@ import {
 import { useStorage } from '@vueuse/core'
 import router from "../router/index";
 
-const localStorage = {
-	getItem: (key) => getLocalStorageItem(key),
-	setItem: (key, value) => setLocalStorageItem(key, value),
-	updateItem: (key, value) => updateLocalStorageItem(key, value),
-	removeItem: (key, value) => removeLocalStorageItem(key, value)
-}
-
 export const useUserStore = defineStore("user", () => {
 	const model = reactive({
 		user: useStorage('user', {
@@ -55,21 +48,49 @@ export const useUserStore = defineStore("user", () => {
 		}
 	};
 
-	const logoutUser = async () => {
-		model.user = {
-			_id: "",
-			email: "",
-			name: ""
-		}
+	const updatePassword = async (currentPassword, newPassword) => {
+		try {
+			const response = await axios.patch("http://localhost:8000/update-password", {
+				currentPassword,
+				newPassword
+			}, {
+				headers: { "Content-Type": "application/json" },
+				withCredentials: true,
+			})
 
-		// model.user._id = "";
-		// model.user.email = "";
-		// model.user.name = "";
-		model.sessionExpiration.expires = null;
-		// localStorage.removeItem('user')
-		// localStorage.removeItem('sessionExpiration')
-		router.push({ path: "/login" })
+			const data = response.data;
+			if (data) {
+				return data.success;
+			}
+		} catch (error) {
+			console.log(error)
+		}
 	}
 
-	return { model, sessionExists, loginUser, logoutUser };
+	const logoutUser = async () => {
+		try {
+			const response = await axios.post("http://localhost:8000/logout", {},{
+				headers: { "Content-Type": "application/json" },
+				withCredentials: true,
+			})
+
+			const data = response.data;
+			if (data.success) {
+				model.user = {
+					_id: "",
+					email: "",
+					name: ""
+				}
+
+				model.sessionExpiration.expires = null;
+
+				router.push({ path: "/login" })
+			}
+		} catch (error) {
+			console.log(error)
+		}
+
+	}
+
+	return { model, sessionExists, loginUser, updatePassword, logoutUser };
 });

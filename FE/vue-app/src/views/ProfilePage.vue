@@ -125,9 +125,10 @@ const validation = {
 	})
 }
 
-const savePassword = () => {
+const savePassword = async () => {
 	if (validation.formValid) {
-		console.log('submit')
+		const passwordUpdated = await userStore.updatePassword(model.user.currentPassword, model.user.newPassword)
+		changePassword.value = !passwordUpdated;
 	}
 }
 
