@@ -1,13 +1,12 @@
 <template>
 	<button type="button"
-		class="btn btn-primary align-self-end m-2"
-		data-bs-toggle="modal"
-		data-bs-target="#newScheduleModal">
+			class="btn btn-primary align-self-end m-2"
+			@click="openModal">
 		NEW
 	</button>
-	<ReusableModal ref="createScheduleModal" modalHeading="New schedule" customId="newScheduleModal">
+	<ReusableModal :modal-active="modalActive" modal-heading="New schedule" @close="closeModal">
 		<form class="text-start">
-			<div class="mb-3 d-flex flex-column align-items-start">
+			<div class="mt-3 mb-4 d-flex flex-column align-items-start">
 				<label
 					for="inputTitle"
 					class="form-label">
@@ -20,7 +19,7 @@
 					placeholder="Title"
 					v-model="model.schedule.title"/>
 			</div>
-			<div class="d-flex flex-column align-items-start">
+			<div class="mb-3 d-flex flex-column align-items-start">
 				<label
 					for="inputDuration"
 					class="form-label">
@@ -46,7 +45,7 @@
 			</div>
 
 			<div class="d-flex justify-content-end form-btns">
-				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+				<button type="button" class="btn btn-secondary" @click="closeModal">
 					Cancel
 				</button>
 				<button type="button" class="btn btn-primary ms-3" @click="handleSubmit">
@@ -58,34 +57,62 @@
 </template>
 
 <script setup>
-	import { reactive, ref } from "vue";
-	import { useSchedulesStore } from "@/stores/SchedulesStore";
-	import ReusableModal from "./ReusableModal"
+import {reactive, ref} from "vue";
+import {useSchedulesStore} from "@/stores/SchedulesStore";
+import ReusableModal from "@/components/ReusableModal.vue";
 
-	const scheduleStore = useSchedulesStore()
+const scheduleStore = useSchedulesStore();
 
-	const model = reactive({
-		schedule: {
-			title: "",
-			duration: ""
-		}
-	})
-
-	const createScheduleModal = ref(null);
-
-	const handleSubmit = async () => {
-		const response = await scheduleStore.createSchedule(model.schedule.title, model.schedule.duration)
-		if (response) {
-			createScheduleModal.value.modal.hide()
-			//const backdrop = document.getElementsByClassName('modal-backdrop fade show')
-			//console.log(backdrop)
-			//backdrop.remove()
-		}
+const model = reactive({
+	schedule: {
+		title: "",
+		duration: ""
 	}
+})
+
+const modalActive = ref(false);
+
+const openModal = () => {
+	modalActive.value = true
+}
+
+const closeModal = () => {
+	modalActive.value = false
+}
+
+const handleSubmit = async () => {
+	const response = await scheduleStore.createSchedule(model.schedule.title, model.schedule.duration);
+	if (response) {
+		closeModal()
+	}
+}
 
 </script>
 <style scoped lang="scss">
-	.form-btns {
-		margin-top: 3rem;
+@import "@/styles/index";
+
+.form-btns {
+	margin-top: 3rem;
+}
+
+.modal {
+
+	.modal-content {
+		background-color: $light-rose;
+
+		.modal-header {
+			padding: 3rem;
+			border-bottom: none;
+
+			.close-btn {
+				border: none;
+				background: transparent;
+			}
+		}
+
+		.modal-body {
+			padding: 0 3rem 3rem 3rem;
+		}
 	}
+}
 </style>
