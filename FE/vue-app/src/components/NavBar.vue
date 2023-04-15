@@ -31,7 +31,7 @@
                     <li class="nav-item">
                         <RouterLink
                             to="/schedules"
-							:class="['nav-link me-3', { 'text-underline fw-500': routeName === 'schedules'}]">
+							:class="['nav-link me-3', { 'text-underline fw-500': routeName === 'schedules' || routeName === 'edit-schedule'}]">
                             My schedules
                         </RouterLink>
                     </li>

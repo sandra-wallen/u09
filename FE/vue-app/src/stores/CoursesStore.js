@@ -36,6 +36,34 @@ export const useCoursesStore = defineStore("courses", () => {
 		}
 	};
 
+	const addCourseToSchedule = async (course, scheduleId) => {
+		const updatedCourses = schedulesStore.model.schedule.courses = [ ...schedulesStore.model.schedule.courses, course ]
+
+		try {
+			const response = await fetch(
+				`http://localhost:8000/update-schedule/${scheduleId}`,
+				{
+					method: "PATCH",
+					headers: {
+						"Content-Type": "application/json",
+					},
+					credentials: "include",
+					body: JSON.stringify({ courses: updatedCourses }),
+				}
+			);
+
+			console.log(response);
+			const data = await response.json();
+			console.log(data);
+			if (data.success) {
+				schedulesStore.model.schedule = data.updatedSchedule;
+				return true;
+			}
+		} catch (error) {
+			console.log(error);
+		}
+	}
+
 	const deleteCourseFromSchedule = async (courseId, scheduleId) => {
 		const filteredCourses = schedulesStore.model.schedule.courses.filter(
 			(item) => item.course !== courseId
@@ -64,5 +92,5 @@ export const useCoursesStore = defineStore("courses", () => {
 		}
 	};
 
-	return { model, getCourses, deleteCourseFromSchedule };
+	return { model, getCourses, addCourseToSchedule, deleteCourseFromSchedule };
 });

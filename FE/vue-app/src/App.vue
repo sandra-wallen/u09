@@ -1,7 +1,9 @@
 <template>
-	<Notifications position="top center" pauseOnHover />
-	<NavBar />
-	<router-view />
+	<div class="col-12 col-xl-8 offset-xl-2">
+		<Notifications position="top center" pauseOnHover />
+		<NavBar />
+		<router-view />
+	</div>
 </template>
 
 <script setup>

@@ -3,10 +3,12 @@ import { defineStore } from "pinia";
 import { reactive, computed } from "vue";
 import { useNotification } from "@kyvg/vue3-notification";
 import { useCoursesStore } from "./CoursesStore";
+import { useUserStore } from "@/stores/UserStore";
 
 export const useSchedulesStore = defineStore("schedules", () => {
 	const { notify } = useNotification();
 	const coursesStore = useCoursesStore();
+	const userStore = useUserStore();
 
 	const model = reactive({
 		schedules: [],
@@ -34,6 +36,58 @@ export const useSchedulesStore = defineStore("schedules", () => {
 			});
 		}
 	};
+
+	const createSchedule = async (title, duration) => {
+
+		try {
+			const response = await fetch(
+				"http://localhost:8000/create-schedule",
+				{
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json",
+					},
+					credentials: "include",
+					body: JSON.stringify({ ownerId: userStore.model.user._id, title, duration })
+				}
+			)
+
+			const data = await response.json()
+			if (data.success) {
+				model.schedules = [ ...model.schedules, data.schedule ]
+				return true;
+			}
+
+		} catch (error) {
+			console.log(error)
+		}
+	}
+
+	const updateSchedule = async (id, title, duration) => {
+		try {
+			const response = await fetch(
+				`http://localhost:8000/update-schedule/${id}`,
+				{
+					method: "PATCH",
+					headers: {
+						"Content-Type": "application/json",
+					},
+					credentials: "include",
+					body: JSON.stringify({ title, duration }),
+				}
+			);
+
+			console.log(response);
+			const data = await response.json();
+			console.log(data);
+			if (data.success) {
+				model.schedule = data.updatedSchedule;
+				return true;
+			}
+		} catch (error) {
+			console.log(error)
+		}
+	}
 
 	const deleteSchedule = async (id) => {
 		try {
@@ -88,5 +142,5 @@ export const useSchedulesStore = defineStore("schedules", () => {
 		}
 	};
 
-	return { model, getSchedules, deleteSchedule, getSchedule };
+	return { model, getSchedules, createSchedule, updateSchedule, deleteSchedule, getSchedule };
 });

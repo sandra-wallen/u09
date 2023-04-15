@@ -1,5 +1,6 @@
 ﻿@import "bootstrap/scss/functions";
 @import "bootstrap/scss/variables";
+@import "bootstrap/scss/mixins";
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,500;1,400;1,500&display=swap');
 
 // Variables
@@ -9,70 +10,218 @@ $light-rose: #F7F1F0;
 $rose: #D7BFBA;
 $rose-dark: #C2A7A1;
 $dark-gray: #687477;
+$light-gray: #F1F1F1;
 $black: #403234;
 $white: #FFFFFF;
+$red: #965252;
 
-$font-size-16 : 1.6rem;
-$font-size-18 : 1.8rem;
-$font-size-20 : 2rem;
-$font-size-22 : 2.2rem;
-$font-size-24 : 2.4rem;
+$font-size-12: 1.2rem;
+$font-size-14: 1.4rem;
+$font-size-16: 1.6rem;
+$font-size-18: 1.8rem;
+$font-size-20: 2rem;
+$font-size-22: 2.2rem;
+$font-size-24: 2.4rem;
 
+// Bootstrap overrides
+
+$modal-backdrop-opacity: 1;
 
 html {
 	font-size: 10px;
+	color: $black;
 }
 
 .btn {
 	text-transform: uppercase;
 	font-weight: 500;
-	font-size: $font-size-20;
+	font-size: $font-size-16;
 	padding: 0.8rem 2rem;
 
 	&.btn-primary {
 		background-color: $rose;
 		color: $white;
 		border: 2px solid $rose;
+
+		&:active, &:hover {
+			background-color: $rose-dark !important;
+			border-color: $rose-dark !important;
+		}
 	}
 
 	&.btn-secondary {
 		background-color: $white;
 		color: $dark-gray;
 		border: 2px solid $rose;
+
+		&:active, &:hover {
+			background-color: $red !important;
+			border-color: $red !important;
+			color: $white;
+		}
 	}
 
-	&:active {
-		background-color: $rose-dark !important;
-		border-color: $rose-dark !important;
-	}
 
-	&:hover {
-		background-color: $rose-dark;
-		border-color: $rose-dark !important;
-	}
+}
+
+.text-12 {
+	font-size: $font-size-12;
+}
+
+.text-14 {
+	font-size: $font-size-14;
 }
 
 .text-16 {
-	font-size: 1.6rem;
+	font-size: $font-size-16;
 }
 
 .text-18 {
-	font-size: 1.8rem;
+	font-size: $font-size-18;
 }
 
 .text-20 {
-	font-size: 2rem
+	font-size: $font-size-20;
 }
 
 .text-22 {
-	font-size: 2.2rem;
+	font-size: $font-size-22;
+}
+
+.text-24 {
+	font-size: $font-size-24;
 }
 
 .text-underline {
 	text-decoration: underline;
 }
 
+.danger, .text-error {
+	color: $red;
+}
+
 .fw-500 {
 	font-weight: 500;
 }
+
+h1, h2, h3, h4, h5, h6, p {
+	color: $black;
+}
+
+a {
+	color: $black;
+}
+
+.form-label {
+	font-size: $font-size-18;
+	color: $black;
+}
+
+input {
+	&.form-control {
+		color: $black;
+		border: 1px solid $rose-dark;
+		font-size: $font-size-16;
+		padding: 0.6rem 0.8rem;
+	}
+}
+
+.form-select {
+	color: $black;
+	border: 1px solid $rose-dark;
+	font-size: $font-size-16;
+	padding: 0.6rem 0.8rem;
+}
+
+.dp__input_wrap {
+	svg {
+		width: $font-size-16;
+		height: $font-size-16;
+	}
+
+	input.dp__input {
+		color: $black;
+		border: 1px solid $rose-dark;
+		font-size: $font-size-16;
+		padding: 0.6rem 0.8rem 0.6rem 4rem;
+	}
+}
+
+.dp__main .dp__input, .dp__calendar_wrap, .dp__menu {
+	font-family: $font-family-base;
+	z-index: 10 !important;
+}
+
+.dp__calendar_header {
+	font-family: $font-family-base;
+}
+
+.dp__calendar_header_separator {
+	display: none;
+}
+
+.dp__action_row {
+	.dp__selection_preview {
+		font-size: $font-size-14;
+	}
+
+	.dp__action_buttons {
+		width: 100%;
+
+		.dp__action {
+			font-family: $font-family-base;
+			//padding: $spacer-2 $spacer-3 !important;
+
+			&.dp__select {
+				background-color: $rose;
+				color: $white;
+				font-size: $font-size-14;
+			}
+
+			&.dp__cancel {
+				font-size: $font-size-14;
+			}
+		}
+	}
+}
+
+.dp__month_year_row {
+	justify-content: space-between;
+	font-size: $font-size-14;
+
+	.dp__month_year_col_nav {
+		&:first-child {
+			margin-right: auto;
+		}
+
+		&:last-child {
+			margin-left: auto;
+		}
+	}
+}
+
+div.dp__calendar_wrap {
+	.dp__calendar_header {
+		font-size: $font-size-12;
+	}
+
+	.dp__calendar {
+		font-size: $font-size-12;
+
+		.dp__calendar_item {
+			.dp__today {
+				border: none !important;
+			}
+
+			.dp__active_date {
+				background-color: $rose;
+			}
+		}
+	}
+}
+
+.dp__overlay_col .dp__overlay_cell_active {
+	background-color: $rose;
+}
+
 
