@@ -81,8 +81,8 @@ const closeModal = () => {
 }
 
 const handleSubmit = async () => {
-	const response = await scheduleStore.createSchedule(model.schedule.title, model.schedule.duration);
-	if (response) {
+	const createSchedule = await scheduleStore.createSchedule(model.schedule.title, model.schedule.duration);
+	if (createSchedule) {
 		closeModal()
 	}
 }
