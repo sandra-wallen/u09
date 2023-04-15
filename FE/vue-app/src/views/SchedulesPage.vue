@@ -16,7 +16,7 @@
 		<tbody class="text-18">
 			<tr v-for="(schedule) in schedulesStore.model.schedules" class="text-start" :key="schedule._id">
 				<td>
-					<RouterLink to="/">{{schedule.title}}</RouterLink>
+					<RouterLink :to="`/edit-schedule/${schedule._id}`">{{schedule.title}}</RouterLink>
 				</td>
 				<td>{{schedule.duration}} weeks</td>
 				<td>{{schedule.courses?.length}}</td>
