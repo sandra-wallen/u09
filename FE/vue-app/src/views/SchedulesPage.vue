@@ -1,7 +1,5 @@
 <template>
 	<main class="d-flex flex-column mb-3 px-5">
-		<i class="fa-regular fa-pen-to-square"></i>
-
 		<CreateSchedule />
 
 		<table class="table container-sm">
