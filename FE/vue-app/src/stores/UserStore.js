@@ -9,6 +9,9 @@ import {
 } from "@/helpers/localStorage";
 import { useStorage } from '@vueuse/core'
 import router from "../router/index";
+import { useNotification } from "@kyvg/vue3-notification";
+
+const { notify } = useNotification();
 
 export const useUserStore = defineStore("user", () => {
 	const model = reactive({
@@ -48,6 +51,43 @@ export const useUserStore = defineStore("user", () => {
 		}
 	};
 
+	const getUser = async () => {
+		try {
+			const response = await axios.get("http://localhost:8000/user",
+				{
+					headers: { "Content-Type": "application/json" },
+					withCredentials: true,
+				}
+			);
+			if (response.data.success) {
+				model.user = response.data.user;
+			}
+		} catch (error) {
+			// TODO: Error handling
+			console.log(error);
+		}
+	}
+
+	const updateUser = async (userInfo) => {
+		try {
+			const response = await axios.patch("http://localhost:8000/update-user", {
+					user: userInfo
+				},
+			{
+					headers: { "Content-Type": "application/json" },
+					withCredentials: true,
+				}
+			)
+			if (response.data.success) {
+				model.user = response.data.user;
+			}
+			return response.data;
+
+		} catch (error) {
+			return { success: false }
+		}
+	}
+
 	const updatePassword = async (currentPassword, newPassword) => {
 		try {
 			const response = await axios.patch("http://localhost:8000/update-password", {
@@ -58,12 +98,10 @@ export const useUserStore = defineStore("user", () => {
 				withCredentials: true,
 			})
 
-			const data = response.data;
-			if (data) {
-				return data.success;
-			}
+			return response.data;
+
 		} catch (error) {
-			console.log(error)
+			return { success: false, status: error.response.status };
 		}
 	}
 
@@ -92,5 +130,5 @@ export const useUserStore = defineStore("user", () => {
 
 	}
 
-	return { model, sessionExists, loginUser, updatePassword, logoutUser };
+	return { model, sessionExists, loginUser, getUser, updateUser, updatePassword, logoutUser };
 });
