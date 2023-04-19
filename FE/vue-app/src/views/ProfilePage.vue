@@ -17,7 +17,7 @@
 							   v-model="userStore.model.user.name">
 					</div>
 					<div class="col-3 ms-3">
-						<button type="button" class="btn btn-primary save-btn">Save</button>
+						<button type="button" class="btn btn-primary save-btn" @click="updateUser">Save</button>
 					</div>
 				</div>
 				<div class="mb-4">
@@ -64,11 +64,12 @@ import { ref, reactive, computed, onMounted } from "vue";
 import {useUserStore} from "@/stores/UserStore";
 import { useSchedulesStore } from "@/stores/SchedulesStore";
 import { useCoursesStore } from "@/stores/CoursesStore";
+import { useNotification } from "@kyvg/vue3-notification";
 
 const schedulesStore = useSchedulesStore()
 const coursesStore = useCoursesStore()
-
 const userStore = useUserStore()
+const { notify } = useNotification();
 
 const model = reactive({
 	user: {
@@ -79,6 +80,7 @@ const model = reactive({
 })
 
 onMounted(() => {
+	userStore.getUser()
 	schedulesStore.getSchedules()
 	coursesStore.getCourses()
 })
@@ -125,10 +127,54 @@ const validation = {
 	})
 }
 
+const updateUser = async () => {
+	const userInfo = { name: userStore.model.user.name }
+	const updatedUser = await userStore.updateUser(userInfo);
+
+	if (updatedUser.success) {
+		notify({
+			title: "User successfully updated",
+			type: "success",
+			duration: 3000
+		})
+	} else {
+		notify({
+			title: "User could not be updated",
+			type: "Please try again",
+			duration: 6000
+		})
+	}
+}
+
 const savePassword = async () => {
 	if (validation.formValid) {
-		const passwordUpdated = await userStore.updatePassword(model.user.currentPassword, model.user.newPassword)
-		changePassword.value = !passwordUpdated;
+		const updatedPassword = await userStore.updatePassword(model.user.currentPassword, model.user.newPassword)
+		if (updatedPassword.success) {
+			model.user.currentPassword = "";
+			model.user.newPassword = "";
+			model.user.repeatNewPassword = "";
+			changePassword.value = false;
+
+			notify({
+				title: "Password successfully updated",
+				type: "success",
+				duration: 3000
+			})
+
+		} else {
+			if (updatedPassword.status) {
+				const config = {
+					title: updatedPassword.status === 401 ? "Invalid current password"
+						: updatedPassword.status === 404 ? "Could not update password"
+						: "Something went wrong",
+					text: updatedPassword.status === 401 ? "Please enter your current password and try again"
+						: "Please try again",
+					type: "error",
+					duration: 6000
+				}
+				notify(config)
+			}
+		}
 	}
 }
 

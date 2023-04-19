@@ -70,6 +70,41 @@ const loginUser = async (req: Request, res: Response) => {
     }
 };
 
+const updateUser = async (req: Request, res: Response)=> {
+    const { user, id } = req.body;
+    
+    if (!user) {
+        return res
+            .status(400)
+            .json("Please provide user information");
+    } else {
+        try {
+            const updatedUser: any | null = await User.findByIdAndUpdate(id, {...user}, { new: true });
+            
+            if (updatedUser) {
+                return res.status(200).json({
+                    success: true,
+                    user: {
+                        _id: updatedUser._id,
+                        email: updatedUser.email,
+                        name: updatedUser.name
+                    }
+                });
+            } else {
+                return res.status(404).json({
+                    success: false,
+                    message: "Could not update user",
+                });
+            }
+        } catch (error) {
+            return res.status(500).json({
+                success: false,
+                error,
+            });
+        }
+    }
+}
+
 const updatePassword = async (req: Request, res: Response)=> {
     const { currentPassword, newPassword, id } = req.body;
 
@@ -130,7 +165,11 @@ const getUser = async (req: Request, res: Response) => {
         if (user) {
             return res.status(200).json({
                 success: true,
-                user,
+                user: {
+                    _id: user._id,
+                    email: user.email,
+                    name: user.name
+                }
             });
         } else {
             return res.status(404).json({
@@ -168,4 +207,4 @@ const authorizeUser = (req: Request, res: Response, next: any) => {
     }
 };
 
-export { registerUser, loginUser, updatePassword, logoutUser, getUser, authorizeUser };
+export { registerUser, loginUser, updateUser, updatePassword, logoutUser, getUser, authorizeUser };

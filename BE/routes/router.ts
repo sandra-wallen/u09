@@ -1,10 +1,10 @@
 import { Router } from "express";
 import cors, { CorsOptions } from "cors";
 import {
-    authorizeUser,
+    authorizeUser, getUser,
     loginUser, logoutUser,
     registerUser,
-    updatePassword
+    updatePassword, updateUser
 } from "../controllers/user.controller";
 import {
     createSchedule,
@@ -37,6 +37,8 @@ router.post("/register", registerUser);
 router.post("/login", loginUser);
 
 // User routes
+router.get("/user", authorizeUser, getUser);
+router.patch("/update-user", authorizeUser, updateUser);
 router.patch("/update-password", authorizeUser, updatePassword);
 router.post("/logout", authorizeUser, logoutUser);
 
