@@ -1,6 +1,9 @@
 ﻿<template>
 	<main class="d-flex flex-column mb-3 px-5">
 
+		<CreateCourse />
+		<h1 class="align-self-start">Courses</h1>
+
 		<table class="table container-sm">
 			<thead>
 			<tr class="text-start text-20">
@@ -14,7 +17,7 @@
 			<tbody class="text-18">
 			<tr v-for="(course) in coursesStore.model.courses" class="text-start" :key="course._id">
 				<td>
-					<RouterLink to="/">{{course.title}}</RouterLink>
+					<RouterLink :to="`/edit-course/${course._id}`">{{course.title}}</RouterLink>
 				</td>
 				<td>{{course.length}} min</td>
 				<td>
@@ -24,13 +27,13 @@
 				<td>
 					<RouterLink
 						class="me-3"
-						to="/">
+						:to="`/edit-course/${course._id}`">
 						<font-awesome-icon icon="fa-regular fa-pen-to-square" />
 					</RouterLink>
 					<button
 						class="delete-btn"
 						type="button"
-						>
+						@click="deleteCourse(course._id)">
 						<font-awesome-icon icon="fa-regular fa-trash-alt" class="danger"/>
 					</button>
 				</td>
@@ -45,11 +48,14 @@ import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
 import { useCoursesStore } from "@/stores/CoursesStore";
 import { useSchedulesStore } from "@/stores/SchedulesStore";
 import {onMounted} from "vue";
+import CreateCourse from "@/components/CreateCourse.vue";
+import { useNotification } from "@kyvg/vue3-notification";
 
 const coursesStore = useCoursesStore();
 const schedulesStore = useSchedulesStore();
+const { notify } = useNotification();
 
-onMounted(() => {
+onMounted( () => {
 	coursesStore.getCourses()
 	schedulesStore.getSchedules()
 })
@@ -57,6 +63,24 @@ onMounted(() => {
 const includedInSchedulesLength = (id) => {
 	const schedules = schedulesStore.model.schedules.filter(schedule => schedule.courses.some(course => course.course === id))
 	return schedules.length;
+}
+
+const deleteCourse = async (id) => {
+	const deletedCourse = await coursesStore.deleteCourse(id)
+
+	if (deletedCourse.success) {
+		notify({
+			title: "Course successfully deleted",
+			type: "success",
+			duration: 3000
+		})
+	} else {
+		notify({
+			title: "Course could not be deleted",
+			type: "Please try again",
+			duration: 6000
+		})
+	}
 }
 </script>
 

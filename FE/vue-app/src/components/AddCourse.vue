@@ -70,7 +70,6 @@ const model = reactive({
 
 onMounted(() => {
 	coursesStore.getCourses()
-
 	model.course.startDateTime = new Date();
 })
 
@@ -114,13 +113,14 @@ const selectCourseSuggestion = (suggestion) => {
 	courseSuggestions.value = [];
 }
 
-const handleSubmit = () => {
-	const updateSchedule = coursesStore.addCourseToSchedule({
+const handleSubmit = async () => {
+	const updateSchedule = await coursesStore.addCourseToSchedule({
 		course: model.course._id,
 		startDateTime: model.course.startDateTime
 	}, scheduleStore.model.schedule._id)
 
-	if (updateSchedule) {
+	if (updateSchedule.success) {
+		model.course.title = ""
 		closeModal()
 	}
 }
@@ -136,14 +136,4 @@ const handleSubmit = () => {
 		padding: 0.5rem 1.4rem;
 	}
 
-	//:deep(.search-suggestions) {
-	//	top: -2rem;
-	//	.list-group {
-	//		width: 320px;
-	//		z-index: 9;
-	//		border-radius: 0;
-	//		max-height: 22rem;
-	//		overflow-y: scroll;
-	//	}
-	//}
 </style>
