@@ -1,10 +1,10 @@
 <template>
 	<main class="d-flex flex-column mb-3 px-5">
-		<i class="fa-regular fa-pen-to-square"></i>
 
 		<CreateSchedule />
+		<h1 class="align-self-start">Schedules</h1>
 
-		<table class="table container-sm">
+		<table class="table container-sm mt-3">
 		<thead>
 			<tr class="text-start text-20">
 				<th style="width: 20%" scope="col">Title</th>

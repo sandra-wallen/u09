@@ -2,31 +2,32 @@
 	<button type="button"
 			class="btn btn-primary align-self-end m-2"
 			@click="openModal">
-		NEW
+		+ New shedule
 	</button>
 	<ReusableModal :modal-active="modalActive" modal-heading="New schedule" @close="closeModal">
 		<form class="text-start">
-			<div class="mt-3 mb-4 d-flex flex-column align-items-start">
+			<div class="row gx-0 gy-4 py-3">
+			<div class="col-12">
 				<label
-					for="inputTitle"
+					for="create-schedule-title-input"
 					class="form-label">
 					Title
 				</label>
 				<input
 					type="text"
-					id="inputTitle"
+					id="create-schedule-title-input"
 					class="form-control"
 					placeholder="Title"
 					v-model="model.schedule.title"/>
 			</div>
-			<div class="mb-3 d-flex flex-column align-items-start">
+			<div class="col-12">
 				<label
-					for="inputDuration"
+					for="create-schedule-duration-input"
 					class="form-label">
 					Duration
 				</label>
 				<select
-					id="inputDuration"
+					id="create-schedule-duration-input"
 					class="form-select"
 					aria-label="Input duration"
 					v-model="model.schedule.duration">
@@ -44,13 +45,14 @@
 				</select>
 			</div>
 
-			<div class="d-flex justify-content-end form-btns">
+			<div class="col-12 d-flex justify-content-end mt-5">
 				<button type="button" class="btn btn-secondary" @click="closeModal">
 					Cancel
 				</button>
 				<button type="button" class="btn btn-primary ms-3" @click="handleSubmit">
 					Create
 				</button>
+			</div>
 			</div>
 		</form>
 	</ReusableModal>
@@ -93,6 +95,12 @@ const handleSubmit = async () => {
 
 .form-btns {
 	margin-top: 3rem;
+}
+
+input {
+	&.form-control {
+		max-width: 400px;
+	}
 }
 
 .modal {
