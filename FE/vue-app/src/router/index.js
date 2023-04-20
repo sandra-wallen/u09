@@ -6,6 +6,7 @@ import SchedulesPage from "../views/SchedulesPage";
 import EditSchedulePage from "../views/EditSchedulePage";
 import {useUserStore} from "@/stores/UserStore";
 import CoursesPage from "@/views/CoursesPage.vue";
+import EditCoursePage from "@/views/EditCoursePage.vue";
 
 const routes = [
 	{
@@ -37,6 +38,11 @@ const routes = [
 		path: "/courses",
 		name: "courses",
 		component: CoursesPage
+	},
+	{
+		path: "/edit-course/:id",
+		name: "edit-course",
+		component: EditCoursePage
 	}
 ];
 
