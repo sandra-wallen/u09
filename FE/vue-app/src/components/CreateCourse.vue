@@ -99,7 +99,8 @@ const handleSubmit = async () => {
 		} else {
 			notify({
 				title: "Course could not be created",
-				type: "Please try again",
+				text: "Please try again",
+				type: "error",
 				duration: 6000
 			})
 		}

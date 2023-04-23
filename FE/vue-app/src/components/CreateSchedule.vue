@@ -49,7 +49,7 @@
 				<button type="button" class="btn btn-secondary" @click="closeModal">
 					Cancel
 				</button>
-				<button type="button" class="btn btn-primary ms-3" @click="handleSubmit">
+				<button type="button" class="btn btn-primary ms-3" :disabled="!formValid" @click="handleSubmit">
 					Create
 				</button>
 			</div>
@@ -59,17 +59,23 @@
 </template>
 
 <script setup>
-import {reactive, ref} from "vue";
+import {computed, reactive, ref} from "vue";
 import {useSchedulesStore} from "@/stores/SchedulesStore";
 import ReusableModal from "@/components/ReusableModal.vue";
+import { useNotification } from "@kyvg/vue3-notification";
 
 const scheduleStore = useSchedulesStore();
+const { notify } = useNotification();
 
 const model = reactive({
 	schedule: {
 		title: "",
 		duration: ""
 	}
+})
+
+const formValid = computed(() => {
+	return model.schedule.title !== "" && model.schedule.duration !== ""
 })
 
 const modalActive = ref(false);
@@ -83,9 +89,23 @@ const closeModal = () => {
 }
 
 const handleSubmit = async () => {
-	const createSchedule = await scheduleStore.createSchedule(model.schedule.title, model.schedule.duration);
-	if (createSchedule) {
-		closeModal()
+	if (formValid.value) {
+		const createdSchedule = await scheduleStore.createSchedule(model.schedule.title, model.schedule.duration)
+
+		if (createdSchedule.success) {
+			closeModal()
+			notify({
+				title: "Schedule successfully created",
+				type: "success",
+				duration: 3000
+			})
+		} else {
+			notify({
+				title: "Schedule could not be created",
+				type: "Please try again",
+				duration: 6000
+			})
+		}
 	}
 }
 

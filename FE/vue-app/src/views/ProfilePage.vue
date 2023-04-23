@@ -140,7 +140,8 @@ const updateUser = async () => {
 	} else {
 		notify({
 			title: "User could not be updated",
-			type: "Please try again",
+			text: "Please try again",
+			type: "error",
 			duration: 6000
 		})
 	}

@@ -32,31 +32,54 @@
 
 <script setup>
 import {reactive, computed} from 'vue';
-import {useUserStore} from "../stores/UserStore";
+import {useUserStore} from "@/stores/UserStore";
+import { useNotification } from "@kyvg/vue3-notification";
+import router from "@/router";
 
-const userStore = useUserStore();
+const userStore = useUserStore()
+const { notify } = useNotification();
 
 const model = reactive({
 	user: {
 		email: "",
 		password: ""
-	},
-	error: false,
-	errorMessage: ""
+	}
 })
 
-const formValid = computed(() => {
-	return model.user.email !== ""
-})
+const formValid = computed(() => model.user.email !== "" && model.user.password !== "")
 
 const handleSubmit = async () => {
 	if (formValid.value) {
-		const user = {email: model.user.email, password: model.user.password}
-		userStore.loginUser(user)
+		const user = { email: model.user.email, password: model.user.password }
+		const loggedIn = await userStore.loginUser(user)
 
+		if (loggedIn.success) {
+			router.push({ path: "/schedules" })
+		} else {
+			const config = loggedIn.status === 401 ? {
+					title: "Invalid password",
+					text: "Please fill out the correct password and try again"
+				} : loggedIn.status === 404 ? {
+					title: "There is no account registered with this e-mail",
+					text: "Register an account to login"
+				} : {
+					title: "Something went wrong",
+					text: "Please try again"
+				}
+
+			notify({
+				...config,
+				type: "error",
+				duration: 6000
+			})
+		}
 	} else {
-		model.error = true,
-			model.errorMessage = "Något fält är fel"
+		notify({
+			title: "Some field is missing",
+			text: "Please fill out both e-mail and password",
+			type: "error",
+			duration: 6000
+		})
 	}
 }
 </script>

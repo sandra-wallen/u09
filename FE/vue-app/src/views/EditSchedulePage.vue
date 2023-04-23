@@ -92,22 +92,23 @@
 				Back
 			</button>
 		</div>
-
 	</main>
 </template>
 
 <script setup>
-import {computed, onMounted, ref, watch} from "vue";
+	import {computed, onMounted, ref, watch} from "vue";
 	import { useRoute, useRouter } from "vue-router";
 	import { useSchedulesStore } from "../stores/SchedulesStore";
 	import { useCoursesStore } from "../stores/CoursesStore"
 	import AddCourse from "@/components/AddCourse";
 	import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
+	import { useNotification } from "@kyvg/vue3-notification";
 
 	const courses = ref([])
 
 	const schedulesStore = useSchedulesStore()
 	const coursesStore  = useCoursesStore()
+	const { notify } = useNotification();
 
 	const route = useRoute()
 	const router = useRouter()
@@ -115,7 +116,16 @@ import {computed, onMounted, ref, watch} from "vue";
 	const id = route.params.id;
 
 	onMounted(async () => {
-		await schedulesStore.getSchedule(id)
+		const schedule = await schedulesStore.getSchedule(id)
+
+		if (!schedule.success) {
+			notify({
+				title: "Couldn't find schedule",
+				text: "Please try reloading the page",
+				type: "error",
+				duration: 10000,
+			})
+		}
 		await coursesStore.getCourses()
 
 		assignPropertiesToCourses(schedulesStore.model.schedule.courses)
@@ -164,9 +174,24 @@ import {computed, onMounted, ref, watch} from "vue";
 		})
 	}
 
-	const handleSubmit = () => {
+	const handleSubmit = async () => {
 		if (formValid.value) {
-			schedulesStore.updateSchedule(id, schedulesStore.model.schedule.title, schedulesStore.model.schedule.duration)
+			const updatedSchedule = await schedulesStore.updateSchedule(id, schedulesStore.model.schedule.title, schedulesStore.model.schedule.duration)
+
+			if (updatedSchedule.success) {
+				notify({
+					title: "Schedule successfully updated",
+					type: "success",
+					duration: 3000
+				})
+			} else {
+				notify({
+					title: "Schedule could not be updated",
+					text: "Please try again",
+					type: "error",
+					duration: 6000
+				})
+			}
 		}
 	}
 
