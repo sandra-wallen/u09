@@ -85,7 +85,7 @@ const handleSubmit = async () => {
 </script>
 
 <style scoped lang="scss">
-.row {
-	min-height: 70vh;
-}
+	.row {
+		min-height: 70vh;
+	}
 </style>
