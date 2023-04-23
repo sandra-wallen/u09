@@ -28,18 +28,35 @@ export const useUserStore = defineStore("user", () => {
 					headers: { "Content-Type": "application/json" },
 					withCredentials: true,
 				}
-			);
+			)
 
 			if (response.data.success) {
-				model.user = response.data.user;
-				model.sessionExpiration.expires = response.data.expires;
+				model.user = response.data.user
+				model.sessionExpiration.expires = response.data.expires
 			}
 			return response.data
 
 		} catch (error) {
 			return { success: false, status: error.response.status }
 		}
-	};
+	}
+
+	const registerUser = async (user) => {
+		try {
+			const response = await axios.post("http://localhost:8000/register",
+				user,
+				{
+					headers: { "Content-Type": "application/json" },
+					withCredentials: true,
+				}
+			)
+			console.log(response)
+			return response.data
+		} catch (error) {
+			console.log(error)
+			return { success: false, status: error.response.status }
+		}
+	}
 
 	const getUser = async () => {
 		try {
@@ -120,5 +137,5 @@ export const useUserStore = defineStore("user", () => {
 
 	}
 
-	return { model, sessionExists, loginUser, getUser, updateUser, updatePassword, logoutUser };
+	return { model, sessionExists, loginUser, registerUser, getUser, updateUser, updatePassword, logoutUser };
 });
