@@ -7,6 +7,7 @@ import axios from "axios";
 export const useCoursesStore = defineStore("courses", () => {
 	const schedulesStore = useSchedulesStore();
 	const userStore = useUserStore()
+	const baseUrl = process.env.VUE_APP_BASE_URL ? process.env.VUE_APP_BASE_URL : "http://localhost:8000"
 
 	const model = reactive({
 		courses: [],
@@ -15,7 +16,7 @@ export const useCoursesStore = defineStore("courses", () => {
 
 	const getCourses = async () => {
 		try {
-			const response = await axios.get(`http://localhost:8000/courses`, {
+			const response = await axios.get(`${baseUrl}/courses`, {
 				headers: { "Content-Type": "application/json" },
 				withCredentials: true,
 			});
@@ -33,7 +34,7 @@ export const useCoursesStore = defineStore("courses", () => {
 
 	const getCourse = async (id) => {
 		try {
-			const response = await axios.get(`http://localhost:8000/course/${id}`, {
+			const response = await axios.get(`${baseUrl}/course/${id}`, {
 				headers: { "Content-Type": "application/json" },
 				withCredentials: true,
 			})
@@ -50,7 +51,7 @@ export const useCoursesStore = defineStore("courses", () => {
 
 	const createCourse = async (course) => {
 		try {
-			const response = await axios.post("http://localhost:8000/create-course", {
+			const response = await axios.post(`${baseUrl}/create-course`, {
 				ownerId: userStore.model.user._id,
 				...course
 			}, {
@@ -70,7 +71,7 @@ export const useCoursesStore = defineStore("courses", () => {
 
 	const updateCourse = async (id, course) => {
 		try {
-			const response = await axios.patch(`http://localhost:8000/update-course/${id}`, {
+			const response = await axios.patch(`${baseUrl}/update-course/${id}`, {
 				...course
 			}, {
 				headers: { "Content-Type": "application/json" },
@@ -94,7 +95,7 @@ export const useCoursesStore = defineStore("courses", () => {
 			courses: updatedCourses
 		})
 		try {
-			const response = await axios.patch(`http://localhost:8000/update-schedule/${scheduleId}`, {
+			const response = await axios.patch(`${baseUrl}/update-schedule/${scheduleId}`, {
 					courses: updatedCourses
 				},
 				{
@@ -116,7 +117,7 @@ export const useCoursesStore = defineStore("courses", () => {
 
 	const deleteCourse = async (id) => {
 		try {
-			const response = await axios.delete(`http://localhost:8000/delete-course/${id}`, {
+			const response = await axios.delete(`${baseUrl}/delete-course/${id}`, {
 				headers: { "Content-Type": "application/json" },
 				withCredentials: true,
 			})
@@ -137,7 +138,7 @@ export const useCoursesStore = defineStore("courses", () => {
 			(item) => item.course !== courseId
 		);
 		try {
-			const response = await axios.patch(`http://localhost:8000/update-schedule/${scheduleId}`,
+			const response = await axios.patch(`${baseUrl}/update-schedule/${scheduleId}`,
 				{
 					courses: filteredCourses
 				},

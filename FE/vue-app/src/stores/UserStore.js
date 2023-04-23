@@ -4,6 +4,8 @@ import { reactive, computed } from "vue";
 import { useStorage } from '@vueuse/core'
 
 export const useUserStore = defineStore("user", () => {
+	const baseUrl = process.env.VUE_APP_BASE_URL ? process.env.VUE_APP_BASE_URL : "http://localhost:8000"
+
 	const model = reactive({
 		user: useStorage('user', {
 			_id: "",
@@ -22,7 +24,7 @@ export const useUserStore = defineStore("user", () => {
 	const loginUser = async (user) => {
 		try {
 			const response = await axios.post(
-				"http://localhost:8000/login",
+				`${baseUrl}/login`,
 				user,
 				{
 					headers: { "Content-Type": "application/json" },
@@ -43,7 +45,7 @@ export const useUserStore = defineStore("user", () => {
 
 	const registerUser = async (user) => {
 		try {
-			const response = await axios.post("http://localhost:8000/register",
+			const response = await axios.post(`${baseUrl}/register`,
 				user,
 				{
 					headers: { "Content-Type": "application/json" },
@@ -60,7 +62,7 @@ export const useUserStore = defineStore("user", () => {
 
 	const getUser = async () => {
 		try {
-			const response = await axios.get("http://localhost:8000/user",
+			const response = await axios.get(`${baseUrl}/user`,
 				{
 					headers: { "Content-Type": "application/json" },
 					withCredentials: true,
@@ -78,7 +80,7 @@ export const useUserStore = defineStore("user", () => {
 
 	const updateUser = async (userInfo) => {
 		try {
-			const response = await axios.patch("http://localhost:8000/update-user", {
+			const response = await axios.patch(`${baseUrl}/update-user`, {
 					user: userInfo
 				},
 			{
@@ -98,7 +100,7 @@ export const useUserStore = defineStore("user", () => {
 
 	const updatePassword = async (currentPassword, newPassword) => {
 		try {
-			const response = await axios.patch("http://localhost:8000/update-password", {
+			const response = await axios.patch(`${baseUrl}/update-password`, {
 				currentPassword,
 				newPassword
 			}, {
@@ -114,7 +116,7 @@ export const useUserStore = defineStore("user", () => {
 
 	const logoutUser = async () => {
 		try {
-			const response = await axios.post("http://localhost:8000/logout", {},{
+			const response = await axios.post(`${baseUrl}/logout`, {},{
 				headers: { "Content-Type": "application/json" },
 				withCredentials: true,
 			})

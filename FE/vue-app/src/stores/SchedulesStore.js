@@ -5,6 +5,7 @@ import { useUserStore } from "@/stores/UserStore"
 
 export const useSchedulesStore = defineStore("schedules", () => {
 	const userStore = useUserStore()
+	const baseUrl = process.env.VUE_APP_BASE_URL ? process.env.VUE_APP_BASE_URL : "http://localhost:8000"
 
 	const model = reactive({
 		schedules: [],
@@ -14,7 +15,7 @@ export const useSchedulesStore = defineStore("schedules", () => {
 	const getSchedules = async () => {
 		try {
 			const response = await axios.get(
-				"http://localhost:8000/schedules",
+				`${baseUrl}/schedules`,
 				{
 					headers: { "Content-Type": "application/json" },
 					withCredentials: true,
@@ -34,7 +35,7 @@ export const useSchedulesStore = defineStore("schedules", () => {
 	const getSchedule = async (id) => {
 		try {
 			const response = await axios.get(
-				`http://localhost:8000/schedule/${id}`,
+				`${baseUrl}/schedule/${id}`,
 				{
 					headers: { "Content-Type": "application/json" },
 					withCredentials: true,
@@ -55,7 +56,7 @@ export const useSchedulesStore = defineStore("schedules", () => {
 
 		try {
 			const response = await axios.post(
-				"http://localhost:8000/create-schedule",
+				`${baseUrl}/create-schedule`,
 				{ ownerId: userStore.model.user._id, title, duration },
 				{
 					headers: { "Content-Type": "application/json" },
@@ -77,7 +78,7 @@ export const useSchedulesStore = defineStore("schedules", () => {
 	const updateSchedule = async (id, title, duration) => {
 		try {
 			const response = await axios.patch(
-				`http://localhost:8000/update-schedule/${id}`,
+				`${baseUrl}/update-schedule/${id}`,
 				{
 					title,
 					duration
@@ -101,7 +102,7 @@ export const useSchedulesStore = defineStore("schedules", () => {
 	const deleteSchedule = async (id) => {
 		try {
 			const response = await axios.delete(
-				`http://localhost:8000/delete-schedule/${id}`,
+				`${baseUrl}/delete-schedule/${id}`,
 				{
 					headers: { "Content-Type": "application/json" },
 					withCredentials: true,
