@@ -1,19 +1,15 @@
-import axios from "axios";
-import { defineStore } from "pinia";
-import { reactive, computed } from "vue";
-import { useNotification } from "@kyvg/vue3-notification";
-import { useCoursesStore } from "./CoursesStore";
-import { useUserStore } from "@/stores/UserStore";
+import axios from "axios"
+import { defineStore } from "pinia"
+import { reactive } from "vue"
+import { useUserStore } from "@/stores/UserStore"
 
 export const useSchedulesStore = defineStore("schedules", () => {
-	const { notify } = useNotification();
-	const coursesStore = useCoursesStore();
-	const userStore = useUserStore();
+	const userStore = useUserStore()
 
 	const model = reactive({
 		schedules: [],
 		schedule: {},
-	});
+	})
 
 	const getSchedules = async () => {
 		try {
@@ -23,124 +19,100 @@ export const useSchedulesStore = defineStore("schedules", () => {
 					headers: { "Content-Type": "application/json" },
 					withCredentials: true,
 				}
-			);
+			)
 
-			console.log(response.data);
-			model.schedules = response.data.schedules;
+			if (response.data.success) {
+				model.schedules = response.data.schedules
+			}
+			return response.data
+
 		} catch (error) {
-			notify({
-				title: "Something went wrong",
-				text: "Your schedules couldn't be fetched. Please try reloading the page.",
-				type: "error",
-				duration: 10000,
-			});
+			return { success: false }
 		}
-	};
+	}
+
+	const getSchedule = async (id) => {
+		try {
+			const response = await axios.get(
+				`http://localhost:8000/schedule/${id}`,
+				{
+					headers: { "Content-Type": "application/json" },
+					withCredentials: true,
+				}
+			)
+
+			if (response.data.success) {
+				model.schedule = response.data.schedule
+			}
+			return response.data
+
+		} catch (error) {
+			return { success: false }
+		}
+	}
 
 	const createSchedule = async (title, duration) => {
 
 		try {
-			const response = await fetch(
+			const response = await axios.post(
 				"http://localhost:8000/create-schedule",
+				{ ownerId: userStore.model.user._id, title, duration },
 				{
-					method: "POST",
-					headers: {
-						"Content-Type": "application/json",
-					},
-					credentials: "include",
-					body: JSON.stringify({ ownerId: userStore.model.user._id, title, duration })
+					headers: { "Content-Type": "application/json" },
+					withCredentials: true,
 				}
+
 			)
 
-			const data = await response.json()
-			if (data.success) {
-				model.schedules = [ ...model.schedules, data.schedule ]
-				return true;
+			if (response.data.success) {
+				model.schedules = [ ...model.schedules, response.data.schedule ]
 			}
+			return response.data
 
 		} catch (error) {
-			console.log(error)
+			return { success: false }
 		}
 	}
 
 	const updateSchedule = async (id, title, duration) => {
 		try {
-			const response = await fetch(
+			const response = await axios.patch(
 				`http://localhost:8000/update-schedule/${id}`,
 				{
-					method: "PATCH",
-					headers: {
-						"Content-Type": "application/json",
-					},
-					credentials: "include",
-					body: JSON.stringify({ title, duration }),
+					title,
+					duration
+				},
+				{
+					headers: { "Content-Type": "application/json" },
+					withCredentials: true,
 				}
-			);
+			)
 
-			console.log(response);
-			const data = await response.json();
-			console.log(data);
-			if (data.success) {
-				model.schedule = data.updatedSchedule;
-				return true;
+			if (response.data.success) {
+				model.schedule = response.data.updatedSchedule
 			}
+			return response.data
+
 		} catch (error) {
-			console.log(error)
+			return { success: false }
 		}
 	}
 
 	const deleteSchedule = async (id) => {
 		try {
-			const response = await fetch(
+			const response = await axios.delete(
 				`http://localhost:8000/delete-schedule/${id}`,
 				{
-					method: "DELETE",
-					headers: {
-						"Content-Type": "application/json",
-					},
-					credentials: "include",
+					headers: { "Content-Type": "application/json" },
+					withCredentials: true,
 				}
-			);
-			const data = await response.json();
-			if (data.success) {
-				getSchedules();
-			}
+			)
+
+			return response.data
 		} catch (error) {
-			notify({
-				title: "Something went wrong",
-				text: "Your schedule couldn't be deleted. Please try again.",
-				type: "error",
-				duration: 10000,
-			});
+			return { success: false }
 		}
-	};
+	}
 
-	const getSchedule = async (id) => {
-		try {
-			const response = await fetch(
-				`http://localhost:8000/schedule/${id}`,
-				{
-					method: "GET",
-					headers: {
-						"Content-Type": "application/json",
-					},
-					credentials: "include",
-				}
-			);
-
-			const data = await response.json();
-			if (data.success) {
-				model.schedule = data.schedule;
-			}
-		} catch (error) {
-			notify({
-				title: "Something went wrong",
-				text: "Couldn't find schedule. Please try again.",
-				type: "error",
-				duration: 10000,
-			});
-		}
-	};
-
-	return { model, getSchedules, createSchedule, updateSchedule, deleteSchedule, getSchedule };
-});
+	return { model, getSchedules, createSchedule, updateSchedule, deleteSchedule, getSchedule }
+})

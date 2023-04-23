@@ -1,17 +1,7 @@
 import axios from "axios";
 import { defineStore } from "pinia";
 import { reactive, computed } from "vue";
-import {
-	getLocalStorageItem,
-	updateLocalStorageItem,
-	removeLocalStorageItem,
-	setLocalStorageItem
-} from "@/helpers/localStorage";
 import { useStorage } from '@vueuse/core'
-import router from "../router/index";
-import { useNotification } from "@kyvg/vue3-notification";
-
-const { notify } = useNotification();
 
 export const useUserStore = defineStore("user", () => {
 	const model = reactive({
@@ -40,14 +30,14 @@ export const useUserStore = defineStore("user", () => {
 				}
 			);
 
-			model.user = response.data.user;
-			model.sessionExpiration.expires = response.data.expires;
-			//localStorage.setItem('user', response.data.user)
-			//localStorage.setItem('sessionExpiration', response.data.expires)
-			router.push({ path: "/schedules" })
+			if (response.data.success) {
+				model.user = response.data.user;
+				model.sessionExpiration.expires = response.data.expires;
+			}
+			return response.data
+
 		} catch (error) {
-			// TODO: Error handling
-			console.log(error);
+			return { success: false, status: error.response.status }
 		}
 	};
 
@@ -62,9 +52,10 @@ export const useUserStore = defineStore("user", () => {
 			if (response.data.success) {
 				model.user = response.data.user;
 			}
+			return response.data
+
 		} catch (error) {
-			// TODO: Error handling
-			console.log(error);
+			return { success: false }
 		}
 	}
 
@@ -97,7 +88,6 @@ export const useUserStore = defineStore("user", () => {
 				headers: { "Content-Type": "application/json" },
 				withCredentials: true,
 			})
-
 			return response.data;
 
 		} catch (error) {
@@ -122,10 +112,10 @@ export const useUserStore = defineStore("user", () => {
 
 				model.sessionExpiration.expires = null;
 
-				router.push({ path: "/login" })
+				return response.data
 			}
 		} catch (error) {
-			console.log(error)
+			return { success: false }
 		}
 
 	}

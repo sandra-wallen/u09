@@ -44,15 +44,37 @@
 	import { useSchedulesStore } from '@/stores/SchedulesStore';
 	import CreateSchedule from '@/components/CreateSchedule';
 	import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
+	import { useNotification } from "@kyvg/vue3-notification";
 
 	const schedulesStore = useSchedulesStore()
+	const { notify } = useNotification();
 
-	onMounted(() => {
-		schedulesStore.getSchedules()
+	onMounted(async () => {
+		const schedules = await schedulesStore.getSchedules()
+
+		if (!schedules.success) {
+			notify({
+				title: "Your schedules couldn't be fetched",
+				text: "Please try reloading the page",
+				type: "error",
+				duration: 6000,
+			});
+		}
 	})
 
-	const handleDelete = (id) => {
-		schedulesStore.deleteSchedule(id)
+	const handleDelete = async(id) => {
+		const deletedSchedule = await schedulesStore.deleteSchedule(id)
+
+		if (deletedSchedule.success) {
+			await schedulesStore.getSchedules()
+		} else {
+			notify({
+				title: "Your schedule couldn't be deleted",
+				text: "Please try again.",
+				type: "error",
+				duration: 6000,
+			})
+		}
 	}
 </script>
 <style scoped lang="scss">

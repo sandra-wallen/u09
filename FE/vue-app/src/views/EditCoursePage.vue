@@ -1,6 +1,6 @@
 ﻿<template>
 	<main>
-		<div class="row gx-2">
+		<div class="row gx-2 my-4">
 			<div class="col-12 mb-4">
 				<h1 class="text-start">{{ coursesStore.model.course.title }}</h1>
 			</div>
@@ -69,6 +69,11 @@
 				</table>
 			</div>
 		</div>
+		<div class="d-flex justify-content-start align-items-end">
+			<button type="button" class="btn btn-secondary" @click="goBack">
+				Back
+			</button>
+		</div>
 	</main>
 </template>
 
@@ -76,13 +81,15 @@
 import {useCoursesStore} from "@/stores/CoursesStore";
 import { useSchedulesStore } from "@/stores/SchedulesStore";
 import {computed, onMounted} from "vue";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import { useNotification } from "@kyvg/vue3-notification";
 
 const coursesStore = useCoursesStore()
 const schedulesStore = useSchedulesStore();
 const { notify } = useNotification();
+
 const route = useRoute()
+const router = useRouter()
 
 const id = route.params.id;
 
@@ -124,13 +131,16 @@ const handleSubmit = async () => {
 		}
 	}
 }
+
+const goBack = () => {
+	router.back();
+}
 </script>
 
 <style scoped lang="scss">
 
 input {
 	&.form-control {
-		max-width: 400px;
 		&.form-control-color {
 			width: 100px;
 		}

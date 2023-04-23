@@ -46,7 +46,7 @@
                 <button v-if="userStore.sessionExists"
                     class="btn btn-secondary ms-auto"
                     type="button"
-					@click="userStore.logoutUser()">
+					@click="logoutUser">
                     Logout
                 </button>
 				<button v-if="!userStore.sessionExists"
@@ -60,14 +60,31 @@
     </nav>
 </template>
 <script setup>
-	import { computed, onUpdated } from "vue";
+	import { computed } from "vue";
 	import { useUserStore} from "@/stores/UserStore";
 	import router from "@/router/index";
 	import { useRoute } from "vue-router";
+	import { useNotification } from "@kyvg/vue3-notification";
 
 	const userStore = useUserStore();
+	const { notify } = useNotification();
 
 	const routeName = computed(() => useRoute().name)
+
+	const logoutUser = async () => {
+		const loggedOut = await userStore.logoutUser()
+
+		if (loggedOut.success) {
+			router.push({ path: "/login" })
+		} else {
+			notify({
+				title: "Something went wrong",
+				text: "Please try again",
+				type: "error",
+				duration: 6000
+			})
+		}
+	}
 </script>
 <style lang="scss">
 	@import "@/styles/index";
