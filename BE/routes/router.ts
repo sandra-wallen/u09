@@ -25,7 +25,7 @@ import {
 const router = Router();
 // Configure cors options allowed origins
 const corsOptions: CorsOptions = {
-    origin: ["http://localhost:3000", "http://localhost:8081"],
+    origin: ["http://localhost:3000", "http://localhost:8081", "https://sandra-wallen-u09.onrender.com"],
     credentials: true,
 };
 
