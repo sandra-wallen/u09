@@ -11,7 +11,7 @@ import router from "./routes/router";
 const app = express();
 const port = process.env.PORT;
 
-const connectionString: string = `${process.env.MONGODB_CONNECTION_STRING}/${process.env.MONGODB_DB_NAME}`;
+const connectionString: string = process.env.MONGODB_URL;
 
 app.use(express.json());
 app.use(cookieParser());
