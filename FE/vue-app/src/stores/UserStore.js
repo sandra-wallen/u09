@@ -2,15 +2,23 @@ import axios from "axios";
 import { defineStore } from "pinia";
 import { reactive, computed } from "vue";
 import { useStorage } from '@vueuse/core'
+import { useAdminStore } from "@/stores/AdminStore"
+import { useSchedulesStore } from "@/stores/SchedulesStore"
+import { useCoursesStore } from "@/stores/CoursesStore"
 
 export const useUserStore = defineStore("user", () => {
+	const adminStore = useAdminStore()
+	const schedulesStore = useSchedulesStore()
+	const coursesStore = useCoursesStore()
+
 	const baseUrl = process.env.VUE_APP_BASE_URL ? process.env.VUE_APP_BASE_URL : "http://localhost:8000"
 
 	const model = reactive({
 		user: useStorage('user', {
 			_id: "",
 			email: "",
-			name: ""
+			name: "",
+			isAdmin: false
 		}),
 		sessionExpiration: useStorage('sessionExpiration', {
 			expires: null
@@ -121,18 +129,22 @@ export const useUserStore = defineStore("user", () => {
 				withCredentials: true,
 			})
 
-			const data = response.data;
-			if (data.success) {
+			if (response.data.success) {
+				if (model.user.isAdmin) {
+					adminStore.model.users = []
+				}
 				model.user = {
 					_id: "",
 					email: "",
 					name: ""
 				}
-
 				model.sessionExpiration.expires = null;
-
-				return response.data
+				schedulesStore.model.schedules = []
+				schedulesStore.model.schedule = {}
+				coursesStore.model.courses = []
+				coursesStore.model.course = {}
 			}
+			return response.data
 		} catch (error) {
 			return { success: false }
 		}

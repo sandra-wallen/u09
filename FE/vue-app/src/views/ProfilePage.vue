@@ -1,5 +1,5 @@
 <template>
-	<main class="about">
+	<main>
 		<div class="row gx-0">
 			<div class="col-12 mb-5">
 				<h1 class="text-start">Hello {{ userStore.model.user.name }}</h1>

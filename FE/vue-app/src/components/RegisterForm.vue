@@ -73,8 +73,6 @@
 		repeatPassword: ""
 	})
 
-
-
 	const repeatPasswordValid = ref(null)
 
 	const validation = {
