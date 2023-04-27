@@ -1,12 +1,13 @@
-import { createRouter, createWebHistory } from "vue-router";
-import HomePage from "../views/HomePage";
-import LandingPage from "../views/LandingPage";
-import ProfilePage from "../views/ProfilePage";
-import SchedulesPage from "../views/SchedulesPage";
-import EditSchedulePage from "../views/EditSchedulePage";
-import {useUserStore} from "@/stores/UserStore";
-import CoursesPage from "@/views/CoursesPage.vue";
-import EditCoursePage from "@/views/EditCoursePage.vue";
+import { createRouter, createWebHistory } from "vue-router"
+import HomePage from "../views/HomePage"
+import LandingPage from "../views/LandingPage"
+import ProfilePage from "../views/ProfilePage"
+import SchedulesPage from "../views/SchedulesPage"
+import EditSchedulePage from "../views/EditSchedulePage"
+import {useUserStore} from "@/stores/UserStore"
+import CoursesPage from "@/views/CoursesPage.vue"
+import EditCoursePage from "@/views/EditCoursePage.vue"
+import AdminDashboardPage from "@/views/AdminDashboardPage.vue"
 
 const routes = [
 	{
@@ -43,6 +44,11 @@ const routes = [
 		path: "/edit-course/:id",
 		name: "edit-course",
 		component: EditCoursePage
+	},
+	{
+		path: "/admin-dashboard",
+		name: "admin-dashboard",
+		component: AdminDashboardPage
 	}
 ];
 
