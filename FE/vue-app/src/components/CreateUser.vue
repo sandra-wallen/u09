@@ -1,8 +1,13 @@
-<template>
-	<div class="row gx-0 p-3 text-dark d-flex justify-content-center align-items-center">
+﻿<template>
+	<button type="button"
+			class="btn btn-primary align-self-end m-2"
+			@click="openModal">
+		+ New user
+	</button>
+	<ReusableModal :modal-active="modalActive" modal-heading="New user" @close="closeModal">
 		<form>
-			<div class="col-12 col-md-4 offset-md-4">
-				<div class="mb-5">
+			<div class="row gx-0 gy-4 py-3">
+				<div class="col-12">
 					<label for="register-name-input" class="form-label w-100 text-start">
 						Name
 					</label>
@@ -12,7 +17,7 @@
 						id="register-name-input"
 						v-model="model.user.name"/>
 				</div>
-				<div class="mb-5">
+				<div class="col-12">
 					<label for="register-email-input" class="form-label w-100 text-start">
 						E-mail
 					</label>
@@ -22,7 +27,7 @@
 						id="register-email-input"
 						v-model="model.user.email"/>
 				</div>
-				<div class="mb-5">
+				<div class="col-12">
 					<label for="register-password-input" class="form-label w-100 text-start">
 						Password
 					</label>
@@ -32,7 +37,7 @@
 						id="register-password-input"
 						v-model="model.user.password"/>
 				</div>
-				<div class="mb-5">
+				<div class="col-12">
 					<label for="register-repeat-password-input" class="form-label w-100 text-start">
 						Repeat password
 					</label>
@@ -46,22 +51,29 @@
 						Passwords must match
 					</div>
 				</div>
-				<button type="button" class="btn btn-primary w-50 mt-4" :disabled="!validation.formValid.value" @click="handleSubmit">
-					Register
-				</button>
+				<div class="col-12 d-flex justify-content-end mt-5">
+					<button type="button" class="btn btn-secondary" @click="closeModal">
+						Cancel
+					</button>
+					<button type="button" class="btn btn-primary ms-3" :disabled="!validation.formValid.value" @click="handleSubmit">
+						Create
+					</button>
+				</div>
 			</div>
 		</form>
-	</div>
+	</ReusableModal>
 </template>
 
 <script setup>
+	import ReusableModal from "@/components/ReusableModal.vue";
 	import { computed, reactive, ref, defineEmits } from "vue"
 	import { useUserStore} from "@/stores/UserStore"
+	import { useAdminStore } from "@/stores/AdminStore"
 	import { useNotification } from "@kyvg/vue3-notification";
 
 	const userStore = useUserStore()
+	const adminStore = useAdminStore()
 	const { notify } = useNotification();
-	const emit = defineEmits(['created'])
 
 	const model = reactive({
 		user: {
@@ -72,6 +84,16 @@
 		},
 		repeatPassword: ""
 	})
+
+	const modalActive = ref(false);
+
+	const openModal = () => {
+		modalActive.value = true
+	}
+
+	const closeModal = () => {
+		modalActive.value = false
+	}
 
 	const repeatPasswordValid = ref(null)
 
@@ -126,7 +148,8 @@
 					type: "success",
 					duration: 3000
 				})
-				emit('created')
+				await adminStore.getUsers()
+				closeModal()
 			} else {
 				if (registered.status && registered.status === 500) {
 					notify({
@@ -141,8 +164,6 @@
 	}
 </script>
 
-<style scoped lang="scss">
-	.row {
-		min-height: 70vh;
-	}
+<style scoped>
+
 </style>

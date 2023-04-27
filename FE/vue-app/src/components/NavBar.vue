@@ -42,6 +42,13 @@
                             Courses
                         </RouterLink>
                     </li>
+					<li v-if="userStore.model.user.isAdmin" class="nav-item">
+						<RouterLink
+							to="/admin-dashboard"
+							:class="['nav-link me-3', { 'text-underline fw-500': routeName === 'admin-dashboard'}]">
+							Dashboard
+						</RouterLink>
+					</li>
                 </ul>
                 <button v-if="userStore.sessionExists"
                     class="btn btn-secondary ms-auto"

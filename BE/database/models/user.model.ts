@@ -27,6 +27,10 @@ const userSchema = new mongoose.Schema(
     password: {
       type: String,
       required: true
+    },
+    isAdmin: {
+      type: Boolean,
+      required: true
     }
   }, 
   {
@@ -41,9 +45,7 @@ userSchema.pre("save", async function(next: any) {
 
   const salt = await bcrypt.genSalt(10);
 
-  const hash = await bcrypt.hashSync(this.password, salt)
-
-  this.password = hash;
+  this.password = await bcrypt.hashSync(this.password, salt)
 
   return next();
 })
