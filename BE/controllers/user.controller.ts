@@ -5,7 +5,8 @@ import bcrypt from 'bcrypt';
 
 const registerUser = async (req: Request, res: Response) => {
     try {
-        const user = await User.create(req.body);
+        const isAdmin = req.body.isAdmin ? req.body.isAdmin : false;
+        const user = await User.create({ ...req.body, isAdmin });
         user.save().then(() => {
             res.status(201).json({ success: true, message: "User created" });
         });
@@ -36,7 +37,7 @@ const loginUser = async (req: Request, res: Response) => {
             return res.status(401).json("Invalid password");
         }
         if (user) {
-            const token = jwt.sign(
+            const token :string = jwt.sign(
                 { id: user._id, isAdmin: user.isAdmin },
                 process.env.JWT_SECRET!,
                 {
@@ -44,7 +45,7 @@ const loginUser = async (req: Request, res: Response) => {
                 }
             );
 
-            const expires = new Date(Date.now() + 86400 * 1000);
+            const expires : Date = new Date(Date.now() + 86400 * 1000);
 
             return res
                 .cookie("access_token", token, {
@@ -61,6 +62,7 @@ const loginUser = async (req: Request, res: Response) => {
                         _id: user._id,
                         email: user.email,
                         name: user.name,
+                        isAdmin: user.isAdmin
                     },
                     expires: expires,
                 });
@@ -87,7 +89,8 @@ const updateUser = async (req: Request, res: Response)=> {
                     user: {
                         _id: updatedUser._id,
                         email: updatedUser.email,
-                        name: updatedUser.name
+                        name: updatedUser.name,
+                        isAdmin: updatedUser.isAdmin
                     }
                 });
             } else {
@@ -168,7 +171,8 @@ const getUser = async (req: Request, res: Response) => {
                 user: {
                     _id: user._id,
                     email: user.email,
-                    name: user.name
+                    name: user.name,
+                    isAdmin: user.isAdmin
                 }
             });
         } else {
@@ -182,7 +186,7 @@ const getUser = async (req: Request, res: Response) => {
     }
 };
 
-const authorizeUser = (req: Request, res: Response, next: any) => {
+const authUser = (req: Request, res: Response, next: any) => {
     const token = req.cookies.access_token;
 
     // Will be true if cookie is not sent or expired
@@ -199,6 +203,7 @@ const authorizeUser = (req: Request, res: Response, next: any) => {
             process.env.JWT_SECRET,
             async (err: any, decoded: any) => {
                 req.body.id = decoded.id;
+                req.body.isAdmin = decoded.isAdmin;
             }
         );
         next();
@@ -207,4 +212,15 @@ const authorizeUser = (req: Request, res: Response, next: any) => {
     }
 };
 
-export { registerUser, loginUser, updateUser, updatePassword, logoutUser, getUser, authorizeUser };
+const authAdmin = (req: Request, res: Response, next: any) => {
+    console.log(req.body.isAdmin);
+    
+    if (req.body.isAdmin) {
+        next();
+    } else {
+        return res.status(403).json({ message: "Not authorized" });
+    }
+    
+}
+
+export { registerUser, loginUser, updateUser, updatePassword, logoutUser, getUser, authUser, authAdmin };

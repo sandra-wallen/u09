@@ -1,11 +1,12 @@
 import { Router } from "express";
 import cors, { CorsOptions } from "cors";
 import {
-    authorizeUser, getUser,
+    authUser, authAdmin, getUser,
     loginUser, logoutUser,
     registerUser,
     updatePassword, updateUser
 } from "../controllers/user.controller";
+import { adminGetUsers, adminUpdateUser, adminDeleteUser } from "../controllers/admin.controller";
 import {
     createSchedule,
     deleteSchedule,
@@ -37,28 +38,29 @@ router.post("/register", registerUser);
 router.post("/login", loginUser);
 
 // User routes
-router.get("/user", authorizeUser, getUser);
-router.patch("/update-user", authorizeUser, updateUser);
-router.patch("/update-password", authorizeUser, updatePassword);
-router.post("/logout", authorizeUser, logoutUser);
+router.get("/user", authUser, getUser);
+router.patch("/update-user", authUser, updateUser);
+router.patch("/update-password", authUser, updatePassword);
+router.post("/logout", authUser, logoutUser);
+
+// Admin routes
+router.get("/admin/users", authUser, authAdmin, adminGetUsers);
+router.patch("/admin/update-user/:userId", authUser, authAdmin, adminUpdateUser);
+router.delete("/admin/delete-user/:userId", authUser, authAdmin, adminDeleteUser);
 
 // Schedule routes
-router.get("/schedules", authorizeUser, getAllSchedules);
-router.get("/schedule/:scheduleId", authorizeUser, getSchedule);
-router.post("/create-schedule", authorizeUser, createSchedule);
-router.patch("/update-schedule/:scheduleId", authorizeUser, updateSchedule);
-router.delete("/delete-schedule/:scheduleId", authorizeUser, deleteSchedule);
+router.get("/schedules", authUser, getAllSchedules);
+router.get("/schedule/:scheduleId", authUser, getSchedule);
+router.post("/create-schedule", authUser, createSchedule);
+router.patch("/update-schedule/:scheduleId", authUser, updateSchedule);
+router.delete("/delete-schedule/:scheduleId", authUser, deleteSchedule);
 
 //Course routes
-router.get("/courses", authorizeUser, getAllCourses);
-router.get(
-    "/schedule/courses/:scheduleId",
-    authorizeUser,
-    getAllCoursesAccociatedWithSchedule
-);
-router.get("/course/:courseId", authorizeUser, getCourse);
-router.post("/create-course", authorizeUser, createCourse);
-router.patch("/update-course/:courseId", authorizeUser, updateCourse);
-router.delete("/delete-course/:courseId", authorizeUser, deleteCourse);
+router.get("/courses", authUser, getAllCourses);
+router.get("/schedule/courses/:scheduleId", authUser, getAllCoursesAccociatedWithSchedule);
+router.get("/course/:courseId", authUser, getCourse);
+router.post("/create-course", authUser, createCourse);
+router.patch("/update-course/:courseId", authUser, updateCourse);
+router.delete("/delete-course/:courseId", authUser, deleteCourse);
 
 export default router;
