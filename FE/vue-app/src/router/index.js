@@ -8,6 +8,7 @@ import {useUserStore} from "@/stores/UserStore"
 import CoursesPage from "@/views/CoursesPage.vue"
 import EditCoursePage from "@/views/EditCoursePage.vue"
 import AdminDashboardPage from "@/views/AdminDashboardPage.vue"
+import EditUserPage from "@/views/EditUserPage.vue";
 
 const routes = [
 	{
@@ -49,6 +50,11 @@ const routes = [
 		path: "/admin-dashboard",
 		name: "admin-dashboard",
 		component: AdminDashboardPage
+	},
+	{
+		path: "/admin-dashboard/update-user/:id",
+		name: "admin-dashbord-update-user",
+		component: EditUserPage
 	}
 ];
 
