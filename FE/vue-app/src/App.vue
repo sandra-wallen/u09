@@ -1,6 +1,6 @@
 <template>
 	<div class="col-12 col-xl-8 offset-xl-2">
-		<Notifications position="top center" pauseOnHover />
+		<Notifications position="bottom center" pauseOnHover />
 		<NavBar />
 		<router-view />
 	</div>
