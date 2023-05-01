@@ -156,6 +156,22 @@ input {
 	}
 }
 
+.form-check {
+	.form-check-label {
+		font-size: $font-size-18;
+	}
+
+	.form-check-input {
+		width: 20px;
+		height: 20px;
+
+		&:checked {
+			background-color: $rose-dark;
+			border-color: $rose-dark;
+		}
+	}
+}
+
 .form-select {
 	color: $black;
 	border: 1px solid $rose-dark;
