@@ -6,7 +6,7 @@ import {
     registerUser,
     updatePassword, updateUser
 } from "../controllers/user.controller";
-import { adminGetUsers, adminUpdateUser, adminDeleteUser } from "../controllers/admin.controller";
+import { adminGetUsers, adminGetUser, adminUpdateUser, adminUpdateUserPassword, adminDeleteUser } from "../controllers/admin.controller";
 import {
     createSchedule,
     deleteSchedule,
@@ -45,7 +45,9 @@ router.post("/logout", authUser, logoutUser);
 
 // Admin routes
 router.get("/admin/users", authUser, authAdmin, adminGetUsers);
+router.get("/admin/user/:userId", authUser, authAdmin, adminGetUser);
 router.patch("/admin/update-user/:userId", authUser, authAdmin, adminUpdateUser);
+router.patch("/admin/update-user-password/:userId", authUser, authAdmin, adminUpdateUserPassword);
 router.delete("/admin/delete-user/:userId", authUser, authAdmin, adminDeleteUser);
 
 // Schedule routes
