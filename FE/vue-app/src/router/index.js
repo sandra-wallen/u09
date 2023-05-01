@@ -53,7 +53,7 @@ const routes = [
 	},
 	{
 		path: "/admin-dashboard/update-user/:id",
-		name: "admin-dashbord-update-user",
+		name: "admin-dashboard-update-user",
 		component: EditUserPage
 	}
 ];
@@ -72,7 +72,7 @@ router.beforeEach((to, from) => {
 		router.push({ path: "/login" })
 	} else if (to.path === "/login" && sessionExists) {
 		router.push({ path: "/schedules" })
-	} else if ((to.path === "/admin-dashboard" || to.name === "admin-dashbord-update-user") && !isAdmin) {
+	} else if ((to.path === "/admin-dashboard" || to.name === "admin-dashboard-update-user") && !isAdmin) {
 		router.push({ path: "/profile" })
 	}
 })
