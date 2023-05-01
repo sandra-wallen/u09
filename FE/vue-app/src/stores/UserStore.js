@@ -5,6 +5,7 @@ import { useStorage } from '@vueuse/core'
 import { useAdminStore } from "@/stores/AdminStore"
 import { useSchedulesStore } from "@/stores/SchedulesStore"
 import { useCoursesStore } from "@/stores/CoursesStore"
+import {clear} from "core-js/internals/task";
 
 export const useUserStore = defineStore("user", () => {
 	const adminStore = useAdminStore()
@@ -126,6 +127,18 @@ export const useUserStore = defineStore("user", () => {
 		}
 	}
 
+	const deleteUser = async () => {
+		try {
+			const response = await axios.delete(`${baseUrl}/delete-user`, {
+				headers: { "Content-Type": "application/json" },
+				withCredentials: true,
+			})
+			return response.data
+		} catch (error) {
+			return { success: false }
+		}
+	}
+
 	const logoutUser = async () => {
 		try {
 			const response = await axios.post(`${baseUrl}/logout`, {},{
@@ -134,26 +147,28 @@ export const useUserStore = defineStore("user", () => {
 			})
 
 			if (response.data.success) {
-				if (model.user.isAdmin) {
-					adminStore.model.users = []
-				}
-				model.user = {
-					_id: "",
-					email: "",
-					name: ""
-				}
-				model.sessionExpiration.expires = null;
-				schedulesStore.model.schedules = []
-				schedulesStore.model.schedule = {}
-				coursesStore.model.courses = []
-				coursesStore.model.course = {}
+				clearState()
+				schedulesStore.clearState()
+				coursesStore.clearState()
 			}
 			return response.data
 		} catch (error) {
 			return { success: false }
 		}
-
 	}
 
-	return { model, sessionExists, isAdmin, loginUser, registerUser, getUser, updateUser, updatePassword, logoutUser };
+	const clearState = () => {
+		if (model.user.isAdmin) {
+			adminStore.model.users = []
+		}
+
+		model.user = {
+			_id: "",
+			email: "",
+			name: ""
+		}
+		model.sessionExpiration.expires = null;
+	}
+
+	return { model, sessionExists, isAdmin, loginUser, registerUser, getUser, updateUser, updatePassword, deleteUser, logoutUser, clearState };
 });
