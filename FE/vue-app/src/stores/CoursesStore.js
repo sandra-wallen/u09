@@ -159,5 +159,10 @@ export const useCoursesStore = defineStore("courses", () => {
 		}
 	};
 
-	return { model, getCourses, getCourse, updateCourse, createCourse, addCourseToSchedule, deleteCourse, deleteCourseFromSchedule };
+	const clearState = () => {
+		model.courses = []
+		model.course = {}
+	}
+
+	return { model, getCourses, getCourse, updateCourse, createCourse, addCourseToSchedule, deleteCourse, deleteCourseFromSchedule, clearState };
 });
