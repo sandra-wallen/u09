@@ -1,16 +1,16 @@
 <template>
-	<main>
+	<main class="mb-3 px-5">
 		<div class="row gx-0">
-			<div class="col-12 col-md-6 mb-5">
-				<h1 class="text-start">Hello {{ userStore.model.user.name }}</h1>
-			</div>
-			<div v-if="!confirmDeleteUser" class="col-12 col-md-6 mb-5 d-flex justify-content-end">
+			<div v-if="!confirmDeleteUser" class="col-12 d-flex justify-content-end">
 				<button class="btn btn-danger" type="button" @click="confirmDeleteUser = true">Delete account</button>
 			</div>
-			<div v-if="confirmDeleteUser" class="col-12 col-md-6 mb-5 d-flex justify-content-end">
+			<div v-if="confirmDeleteUser" class="col-12 d-flex justify-content-end">
 				<p class="text-18 align-self-center mb-0 me-3">Are you sure?</p>
 				<button class="btn btn-secondary" type="button" @click="confirmDeleteUser = false">Cancel</button>
 				<button class="btn btn-danger" type="button" @click="deleteUser">Delete</button>
+			</div>
+			<div class="col-12 mb-5">
+				<h1 class="text-start">Hello {{ userStore.model.user.name }}</h1>
 			</div>
 			<div class="col-12 col-md-6 text-start">
 				<h3 class="mb-4">Information about you</h3>
