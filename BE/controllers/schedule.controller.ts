@@ -7,19 +7,11 @@ const getAllSchedules = async (req: Request, res: Response) => {
         const schedules = await Schedule.find({ ownerId: req.body.id });
 
         if (schedules) {
-            if (schedules.length === 0) {
-                return res.status(404).json({
-                    success: true,
-                    message: "You have no schedules",
-                });
-            } else {
-                return res.status(200).json({
-                    success: true,
-                    schedules,
-                });
-            }
+            return res.status(200).json({
+                success: true,
+                schedules,
+            });
         } else {
-            // Se över denna
             return res.status(404).json({
                 success: false,
                 message: "Something went wrong",

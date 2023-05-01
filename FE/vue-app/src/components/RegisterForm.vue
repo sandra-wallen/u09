@@ -122,7 +122,7 @@
 
 			if (registered.success) {
 				notify({
-					title: "User successfully updated",
+					title: "User successfully created",
 					type: "success",
 					duration: 3000
 				})

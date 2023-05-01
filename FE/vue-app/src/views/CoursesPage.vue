@@ -4,7 +4,7 @@
 		<CreateCourse />
 		<h1 class="align-self-start">Courses</h1>
 
-		<table class="table container-sm">
+		<table v-if="coursesStore.model.courses.length > 0" class="table container-sm">
 			<thead>
 			<tr class="text-start text-20">
 				<th style="width: 30%" scope="col">Title</th>
@@ -40,6 +40,9 @@
 			</tr>
 			</tbody>
 		</table>
+		<div v-else class="my-5">
+			<h2>You have no courses yet</h2>
+		</div>
 	</main>
 </template>
 

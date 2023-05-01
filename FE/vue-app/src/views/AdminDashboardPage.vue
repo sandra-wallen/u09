@@ -4,38 +4,41 @@
 		<CreateUser />
 		<h1 class="align-self-start">Users</h1>
 
-		<table class="table container-sm mt-3">
+		<table v-if="filteredUsers.length > 0" class="table container-sm mt-3">
 			<thead>
-			<tr class="text-start text-20">
-				<th style="width: 30%" scope="col">E-mail</th>
-				<th style="width: 25%" scope="col">Name</th>
-				<th style="width: 20%" scope="col">Member since</th>
-				<th style="width: 10%" scope="col">Admin</th>
-				<th style="width: 15%" scope="col"></th>
-			</tr>
+				<tr class="text-start text-20">
+					<th style="width: 30%" scope="col">E-mail</th>
+					<th style="width: 25%" scope="col">Name</th>
+					<th style="width: 20%" scope="col">Member since</th>
+					<th style="width: 10%" scope="col">Admin</th>
+					<th style="width: 15%" scope="col"></th>
+				</tr>
 			</thead>
 			<tbody class="text-18">
-			<tr v-for="(user) in filteredUsers" class="text-start" :key="user._id">
-				<td>{{user.email}}</td>
-				<td>{{user.name}}</td>
-				<td>{{convertCreatedAt(user.createdAt)}}</td>
-				<td>{{user.isAdmin ? "Yes" : "No"}}</td>
-				<td>
-					<RouterLink
-						class="me-3"
-						:to="`/admin-dashboard/update-user/${user._id}`">
-						<font-awesome-icon icon="fa-regular fa-pen-to-square" />
-					</RouterLink>
-					<button
-						class="delete-btn"
-						type="button"
-						@click="handleDelete(user._id)">
-						<font-awesome-icon icon="fa-regular fa-trash-alt" class="danger"/>
-					</button>
-				</td>
-			</tr>
+				<tr v-for="(user) in filteredUsers" class="text-start" :key="user._id">
+					<td>{{user.email}}</td>
+					<td>{{user.name}}</td>
+					<td>{{convertCreatedAt(user.createdAt)}}</td>
+					<td>{{user.isAdmin ? "Yes" : "No"}}</td>
+					<td>
+						<RouterLink
+							class="me-3"
+							:to="`/admin-dashboard/update-user/${user._id}`">
+							<font-awesome-icon icon="fa-regular fa-pen-to-square" />
+						</RouterLink>
+						<button
+							class="delete-btn"
+							type="button"
+							@click="handleDelete(user._id)">
+							<font-awesome-icon icon="fa-regular fa-trash-alt" class="danger"/>
+						</button>
+					</td>
+				</tr>
 			</tbody>
 		</table>
+		<div v-else class="my-5">
+			<h2>You are the only user so far</h2>
+		</div>
 	</main>
 </template>
 
