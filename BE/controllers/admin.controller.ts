@@ -1,5 +1,6 @@
 ﻿import {Request, Response} from "express";
 import User from "../database/models/user.model";
+import bcrypt from 'bcrypt';
 
 const adminGetUsers = async (req: Request, res: Response) => {
     try {
@@ -27,6 +28,33 @@ const adminGetUsers = async (req: Request, res: Response) => {
         }
     } catch (error) {
         return res.status(500).json({success: false, error});
+    }
+}
+
+const adminGetUser = async (req: Request, res: Response) => {
+    try {
+        const user : any = await User.findById(req.params.userId);
+
+        if (user) {
+            return res.status(200).json({
+                success: true,
+                user: {
+                    _id: user._id,
+                    email: user.email,
+                    name: user.name,
+                    createdAt: user.createdAt,
+                    isAdmin: user.isAdmin
+                }
+            });
+        } else {
+            return res.status(404).json({
+                success: false,
+                message: "User not found",
+            });
+        }
+        
+    } catch (error) {
+        return res.status(500).json({ success: false, error });
     }
 }
 
@@ -62,6 +90,34 @@ const adminUpdateUser = async (req: Request, res: Response) => {
     }
 }
 
+const adminUpdateUserPassword = async (req: Request, res: Response) => {
+    try {
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hashSync(req.body.user.password, salt);
+        
+        const updatedUser : any = await User.findByIdAndUpdate(req.params.userId, 
+            { password: hashedPassword },
+            { new: true }
+        );
+
+        if (updatedUser) {
+            return res.status(200).json({
+                success: true,
+            });
+        } else {
+            return res.status(404).json({
+                success: false,
+                message: "Could not update password",
+            });
+        }
+        
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            error,
+        });
+    }
+}
 const adminDeleteUser = async (req: Request, res: Response) => {
     try {
         const deletedUser = await User.findByIdAndDelete(req.params.userId);
@@ -84,4 +140,4 @@ const adminDeleteUser = async (req: Request, res: Response) => {
     }
 }
 
-export { adminGetUsers, adminUpdateUser, adminDeleteUser };
+export { adminGetUsers, adminGetUser, adminUpdateUser, adminUpdateUserPassword, adminDeleteUser };

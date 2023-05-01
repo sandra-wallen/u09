@@ -8,6 +8,7 @@ import {useUserStore} from "@/stores/UserStore"
 import CoursesPage from "@/views/CoursesPage.vue"
 import EditCoursePage from "@/views/EditCoursePage.vue"
 import AdminDashboardPage from "@/views/AdminDashboardPage.vue"
+import EditUserPage from "@/views/EditUserPage.vue";
 
 const routes = [
 	{
@@ -49,6 +50,11 @@ const routes = [
 		path: "/admin-dashboard",
 		name: "admin-dashboard",
 		component: AdminDashboardPage
+	},
+	{
+		path: "/admin-dashboard/update-user/:id",
+		name: "admin-dashbord-update-user",
+		component: EditUserPage
 	}
 ];
 
@@ -60,11 +66,14 @@ const router = createRouter({
 router.beforeEach((to, from) => {
 	const userStore = useUserStore()
 	const sessionExists = userStore.sessionExists
+	const isAdmin = userStore.isAdmin
 	//to.path !== "/login" && next()
 	if (to.path !== "/login" && !sessionExists) {
 		router.push({ path: "/login" })
 	} else if (to.path === "/login" && sessionExists) {
 		router.push({ path: "/schedules" })
+	} else if ((to.path === "/admin-dashboard" || to.name === "admin-dashbord-update-user") && !isAdmin) {
+		router.push({ path: "/profile" })
 	}
 })
 

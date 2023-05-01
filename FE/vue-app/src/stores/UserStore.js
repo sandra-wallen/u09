@@ -29,6 +29,10 @@ export const useUserStore = defineStore("user", () => {
 		return new Date(model.sessionExpiration.expires) > new Date()
 	});
 
+	const isAdmin = computed(() => {
+		return model.user.isAdmin
+	})
+
 	const loginUser = async (user) => {
 		try {
 			const response = await axios.post(
@@ -151,5 +155,5 @@ export const useUserStore = defineStore("user", () => {
 
 	}
 
-	return { model, sessionExists, loginUser, registerUser, getUser, updateUser, updatePassword, logoutUser };
+	return { model, sessionExists, isAdmin, loginUser, registerUser, getUser, updateUser, updatePassword, logoutUser };
 });

@@ -32,6 +32,7 @@
 					</div>
 					<form v-show="changePassword" class="col-12">
 						<div class="mb-4">
+							<input id="hidden-admin-update-password-input" type="text" v-model="userStore.model.user.email" style="display: none" />
 							<label for="profile-page-current-password-input" class="form-label">Current password</label>
 							<input id="profile-page-current-password-input" type="password" class="form-control" v-model="model.user.currentPassword" autocomplete="current-password">
 						</div>
