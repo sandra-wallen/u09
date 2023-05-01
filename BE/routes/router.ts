@@ -2,7 +2,7 @@ import { Router } from "express";
 import cors, { CorsOptions } from "cors";
 import {
     authUser, authAdmin, getUser,
-    loginUser, logoutUser,
+    loginUser, deleteUser, logoutUser,
     registerUser,
     updatePassword, updateUser
 } from "../controllers/user.controller";
@@ -41,6 +41,7 @@ router.post("/login", loginUser);
 router.get("/user", authUser, getUser);
 router.patch("/update-user", authUser, updateUser);
 router.patch("/update-password", authUser, updatePassword);
+router.delete("/delete-user", authUser, deleteUser);
 router.post("/logout", authUser, logoutUser);
 
 // Admin routes

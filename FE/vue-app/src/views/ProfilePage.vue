@@ -1,8 +1,16 @@
 <template>
 	<main>
 		<div class="row gx-0">
-			<div class="col-12 mb-5">
+			<div class="col-12 col-md-6 mb-5">
 				<h1 class="text-start">Hello {{ userStore.model.user.name }}</h1>
+			</div>
+			<div v-if="!confirmDeleteUser" class="col-12 col-md-6 mb-5 d-flex justify-content-end">
+				<button class="btn btn-danger" type="button" @click="confirmDeleteUser = true">Delete account</button>
+			</div>
+			<div v-if="confirmDeleteUser" class="col-12 col-md-6 mb-5 d-flex justify-content-end">
+				<p class="text-18 align-self-center mb-0 me-3">Are you sure?</p>
+				<button class="btn btn-secondary" type="button" @click="confirmDeleteUser = false">Cancel</button>
+				<button class="btn btn-danger" type="button" @click="deleteUser">Delete</button>
 			</div>
 			<div class="col-12 col-md-6 text-start">
 				<h3 class="mb-4">Information about you</h3>
@@ -66,11 +74,13 @@ import {useUserStore} from "@/stores/UserStore";
 import { useSchedulesStore } from "@/stores/SchedulesStore";
 import { useCoursesStore } from "@/stores/CoursesStore";
 import { useNotification } from "@kyvg/vue3-notification";
+import { useRouter } from "vue-router"
 
 const schedulesStore = useSchedulesStore()
 const coursesStore = useCoursesStore()
 const userStore = useUserStore()
 const { notify } = useNotification();
+const router = useRouter()
 
 const model = reactive({
 	user: {
@@ -86,7 +96,8 @@ onMounted(() => {
 	coursesStore.getCourses()
 })
 
-const changePassword = ref(false);
+const changePassword = ref(false)
+const confirmDeleteUser = ref(false)
 
 const validation = {
 	formValid: computed(() => {
@@ -177,6 +188,24 @@ const savePassword = async () => {
 				notify(config)
 			}
 		}
+	}
+}
+
+const deleteUser = async () => {
+	const deletedUser = await userStore.deleteUser()
+
+	if (deletedUser.success) {
+		userStore.clearState()
+		schedulesStore.clearState()
+		coursesStore.clearState()
+		router.push("/login")
+	} else {
+		notify({
+			title: "User could not be deleted",
+			text: "Please try again",
+			type: "error",
+			duration: 6000
+		})
 	}
 }
 

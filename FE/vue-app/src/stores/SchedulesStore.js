@@ -115,5 +115,10 @@ export const useSchedulesStore = defineStore("schedules", () => {
 		}
 	}
 
-	return { model, getSchedules, createSchedule, updateSchedule, deleteSchedule, getSchedule }
+	const clearState = () => {
+		model.schedules = []
+		model.schedule = {}
+	}
+
+	return { model, getSchedules, createSchedule, updateSchedule, deleteSchedule, getSchedule, clearState }
 })
