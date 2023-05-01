@@ -38,14 +38,14 @@
                     <li class="nav-item">
                         <RouterLink
                             to="/courses"
-							:class="['nav-link me-3', { 'text-underline fw-500': routeName === 'courses'}]">
+							:class="['nav-link me-3', { 'text-underline fw-500': routeName === 'courses' || routeName === 'edit-course'}]">
                             Courses
                         </RouterLink>
                     </li>
 					<li v-if="userStore.model.user.isAdmin" class="nav-item">
 						<RouterLink
 							to="/admin-dashboard"
-							:class="['nav-link me-3', { 'text-underline fw-500': routeName === 'admin-dashboard'}]">
+							:class="['nav-link me-3', { 'text-underline fw-500': routeName === 'admin-dashboard' || routeName === 'admin-dashboard-update-user'}]">
 							Dashboard
 						</RouterLink>
 					</li>
