@@ -66,11 +66,14 @@ const router = createRouter({
 router.beforeEach((to, from) => {
 	const userStore = useUserStore()
 	const sessionExists = userStore.sessionExists
+	const isAdmin = userStore.isAdmin
 	//to.path !== "/login" && next()
 	if (to.path !== "/login" && !sessionExists) {
 		router.push({ path: "/login" })
 	} else if (to.path === "/login" && sessionExists) {
 		router.push({ path: "/schedules" })
+	} else if ((to.path === "/admin-dashboard" || to.name === "admin-dashbord-update-user") && !isAdmin) {
+		router.push({ path: "/profile" })
 	}
 })
 
