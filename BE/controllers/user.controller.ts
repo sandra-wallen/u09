@@ -149,6 +149,28 @@ const updatePassword = async (req: Request, res: Response)=> {
     }
 }
 
+const deleteUser = async (req: Request, res: Response) => {
+    try {
+        const deletedUser = await User.findByIdAndDelete(req.body.id);
+        if (deletedUser) {
+            return res.status(200).json({
+                success: true,
+                message: "Successfully deleted user"
+            });
+        } else {
+            return res.status(404).json({
+                success: false,
+                message: "Could not delete user",
+            });
+        }
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            error,
+        });
+    }
+}
+
 const logoutUser = async (req: Request, res: Response) => {
     return res
         .clearCookie("access_token", {
@@ -223,4 +245,4 @@ const authAdmin = (req: Request, res: Response, next: any) => {
     
 }
 
-export { registerUser, loginUser, updateUser, updatePassword, logoutUser, getUser, authUser, authAdmin };
+export { registerUser, loginUser, updateUser, updatePassword, deleteUser, logoutUser, getUser, authUser, authAdmin };
