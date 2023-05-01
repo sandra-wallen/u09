@@ -1,6 +1,9 @@
 <template>
 	<main>
 		<div class="row gx-2 my-4 schedule-wrapper justify-content-start">
+			<div class="col-12 mb-2">
+				<BackLink />
+			</div>
 			<div class="col-12 mb-4">
 				<h1 class="text-start">{{ schedulesStore.model.schedule.title }}</h1>
 			</div>
@@ -87,11 +90,6 @@
 				</div>
 			</div>
 		</div>
-		<div class="d-flex justify-content-start align-items-end">
-			<button type="button" class="btn btn-secondary" @click="goBack">
-				Back
-			</button>
-		</div>
 	</main>
 </template>
 
@@ -103,6 +101,7 @@
 	import AddCourse from "@/components/AddCourse";
 	import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
 	import { useNotification } from "@kyvg/vue3-notification";
+	import BackLink from "@/components/BackLink.vue";
 
 	const courses = ref([])
 
