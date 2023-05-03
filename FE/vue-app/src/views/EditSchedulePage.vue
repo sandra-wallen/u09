@@ -2,7 +2,7 @@
 	<main>
 		<div class="row gx-2 my-4 schedule-wrapper justify-content-start">
 			<div class="col-12 mb-2">
-				<BackLink />
+				<BackLink/>
 			</div>
 			<div class="col-12 mb-4">
 				<h1 class="text-start">{{ schedulesStore.model.schedule.title }}</h1>
@@ -59,32 +59,32 @@
 						<h2 class="text-22">Courses</h2>
 					</div>
 					<div class="col-6 d-flex justify-content-end">
-						<AddCourse />
+						<AddCourse/>
 					</div>
 					<table class="table container-sm">
 						<thead>
-						<tr class="text-start text-18">
-							<th style="width: 35%" scope="col">Title</th>
-							<th style="width: 20%" scope="col">Start date</th>
-							<th style="width: 20%" scope="col">Start time</th>
-							<th style="width: 15%" scope="col">Length</th>
-							<th style="width: 10%" scope="col"></th>
-						</tr>
+							<tr class="text-start text-18">
+								<th style="width: 35%" scope="col">Title</th>
+								<th style="width: 20%" scope="col">Start date</th>
+								<th style="width: 20%" scope="col">Start time</th>
+								<th style="width: 15%" scope="col">Length</th>
+								<th style="width: 10%" scope="col"></th>
+							</tr>
 						</thead>
 						<tbody class="text-start text-18">
-						<tr v-for="(course) in courses" :key="course._id">
-							<td>
-								<RouterLink to="/">{{course?.title}}</RouterLink>
-							</td>
-							<td>{{ convertStartDate(course.startDateTime) }}</td>
-							<td>{{ convertStartTime(course.startDateTime) }}</td>
-							<td>{{ course?.length }}</td>
-							<td>
-								<button type="button" class="delete-btn" @click="handleDeleteCourse(course._id)">
-									<font-awesome-icon icon="fa-regular fa-trash-alt" class="danger"/>
-								</button>
-							</td>
-						</tr>
+							<tr v-for="(course) in courses" :key="course._id">
+								<td>
+									<RouterLink to="/">{{ course?.title }}</RouterLink>
+								</td>
+								<td>{{ convertStartDate(course.startDateTime) }}</td>
+								<td>{{ convertStartTime(course.startDateTime) }}</td>
+								<td>{{ course?.length }}</td>
+								<td>
+									<button type="button" class="delete-btn" @click="handleDeleteCourse(course._id)">
+										<font-awesome-icon icon="fa-regular fa-trash-alt" class="danger"/>
+									</button>
+								</td>
+							</tr>
 						</tbody>
 					</table>
 				</div>
@@ -94,25 +94,23 @@
 </template>
 
 <script setup>
-	import {computed, onMounted, ref, watch} from "vue";
-	import { useRoute, useRouter } from "vue-router";
-	import { useSchedulesStore } from "../stores/SchedulesStore";
-	import { useCoursesStore } from "../stores/CoursesStore"
-	import AddCourse from "@/components/AddCourse";
-	import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
-	import { useNotification } from "@kyvg/vue3-notification";
-	import BackLink from "@/components/BackLink.vue";
+	import { computed, onMounted, ref, watch } from "vue"
+	import { useRoute } from "vue-router"
+	import { useSchedulesStore } from "@/stores/SchedulesStore"
+	import { useCoursesStore } from "@/stores/CoursesStore"
+	import AddCourse from "@/components/AddCourse"
+	import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome"
+	import { useNotification } from "@kyvg/vue3-notification"
+	import BackLink from "@/components/BackLink.vue"
 
 	const courses = ref([])
 
 	const schedulesStore = useSchedulesStore()
-	const coursesStore  = useCoursesStore()
-	const { notify } = useNotification();
+	const coursesStore = useCoursesStore()
+	const { notify } = useNotification()
 
 	const route = useRoute()
-	const router = useRouter()
-
-	const id = route.params.id;
+	const id = route.params.id
 
 	onMounted(async () => {
 		const schedule = await schedulesStore.getSchedule(id)
@@ -151,9 +149,12 @@
 		}
 	}
 
+	// schedule.courses only stores a reference to the course. This method is used to merge the
+	// reference with the course
 	const assignPropertiesToCourses = (arr) => {
-		courses.value = schedulesStore.model.schedule.courses;
+		courses.value = schedulesStore.model.schedule.courses
 
+		// Assign the original array to a new array in order to not change the original array
 		const newArr = arr
 		newArr.forEach((item, index) => {
 			coursesStore.model.courses.find(c => {
@@ -192,10 +193,6 @@
 				})
 			}
 		}
-	}
-
-	const goBack = () => {
-		router.back();
 	}
 
 	watch(() => schedulesStore.model.schedule.courses, (currValue, prevValue) => {

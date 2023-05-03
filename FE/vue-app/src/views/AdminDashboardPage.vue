@@ -1,39 +1,39 @@
 ﻿<template>
 	<main class="d-flex flex-column mb-3 px-5">
 
-		<CreateUser />
+		<CreateUser/>
 		<h1 class="align-self-start">Users</h1>
 
 		<table v-if="filteredUsers.length > 0" class="table container-sm mt-3">
 			<thead>
-				<tr class="text-start text-20">
-					<th style="width: 30%" scope="col">E-mail</th>
-					<th style="width: 25%" scope="col">Name</th>
-					<th style="width: 20%" scope="col">Member since</th>
-					<th style="width: 10%" scope="col">Admin</th>
-					<th style="width: 15%" scope="col"></th>
-				</tr>
+			<tr class="text-start text-20">
+				<th style="width: 30%" scope="col">E-mail</th>
+				<th style="width: 25%" scope="col">Name</th>
+				<th style="width: 20%" scope="col">Member since</th>
+				<th style="width: 10%" scope="col">Admin</th>
+				<th style="width: 15%" scope="col"></th>
+			</tr>
 			</thead>
 			<tbody class="text-18">
-				<tr v-for="(user) in filteredUsers" class="text-start" :key="user._id">
-					<td>{{user.email}}</td>
-					<td>{{user.name}}</td>
-					<td>{{convertCreatedAt(user.createdAt)}}</td>
-					<td>{{user.isAdmin ? "Yes" : "No"}}</td>
-					<td>
-						<RouterLink
-							class="me-3"
-							:to="`/admin-dashboard/update-user/${user._id}`">
-							<font-awesome-icon icon="fa-regular fa-pen-to-square" />
-						</RouterLink>
-						<button
-							class="delete-btn"
-							type="button"
-							@click="handleDelete(user._id)">
-							<font-awesome-icon icon="fa-regular fa-trash-alt" class="danger"/>
-						</button>
-					</td>
-				</tr>
+			<tr v-for="(user) in filteredUsers" class="text-start" :key="user._id">
+				<td>{{ user.email }}</td>
+				<td>{{ user.name }}</td>
+				<td>{{ convertCreatedAt(user.createdAt) }}</td>
+				<td>{{ user.isAdmin ? "Yes" : "No" }}</td>
+				<td>
+					<RouterLink
+						class="me-3"
+						:to="`/admin-dashboard/update-user/${user._id}`">
+						<font-awesome-icon icon="fa-regular fa-pen-to-square"/>
+					</RouterLink>
+					<button
+						class="delete-btn"
+						type="button"
+						@click="handleDelete(user._id)">
+						<font-awesome-icon icon="fa-regular fa-trash-alt" class="danger"/>
+					</button>
+				</td>
+			</tr>
 			</tbody>
 		</table>
 		<div v-else class="my-5">
@@ -43,10 +43,10 @@
 </template>
 
 <script setup>
-import {computed, onMounted} from "vue"
-	import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome"
+	import { computed, onMounted } from "vue"
+	import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome"
 	import { useAdminStore } from "@/stores/AdminStore"
-	import { useUserStore } from "@/stores/UserStore";
+	import { useUserStore } from "@/stores/UserStore"
 	import { useNotification } from "@kyvg/vue3-notification"
 	import CreateUser from "@/components/CreateUser.vue"
 
@@ -63,10 +63,11 @@ import {computed, onMounted} from "vue"
 				text: "Please try reloading the page",
 				type: "error",
 				duration: 6000,
-			});
+			})
 		}
 	})
 
+	// Exclude logged in user from the list
 	const filteredUsers = computed(() => {
 		return adminStore.model.users.filter(user => user._id !== userStore.model.user._id)
 	})
@@ -94,8 +95,7 @@ import {computed, onMounted} from "vue"
 
 
 </script>
-	<style scoped lang="scss">
-
+<style scoped lang="scss">
 	@import "@/styles/index";
 
 	thead {
@@ -110,5 +110,4 @@ import {computed, onMounted} from "vue"
 		border: none;
 		background: transparent;
 	}
-
 </style>

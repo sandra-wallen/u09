@@ -30,12 +30,11 @@
 											 :no-suggestions-found="noCoursesFound"/>
 					</div>
 				</div>
-
 				<div class="col-3">
-					<button type="button" class="btn btn-primary search-btn text-16" @click="searchCourse">Search</button>
+					<button type="button" class="btn btn-primary search-btn text-16" @click="searchCourse">Search
+					</button>
 				</div>
 			</div>
-
 			<div class="d-flex justify-content-end mt-5">
 				<button type="button" class="btn btn-secondary" @click="closeModal">
 					Cancel
@@ -49,85 +48,84 @@
 </template>
 
 <script setup>
-import {reactive, onMounted, ref} from 'vue';
-import VueDatePicker from '@vuepic/vue-datepicker';
-import '@vuepic/vue-datepicker/dist/main.css';
-import ReusableModal from "@/components/ReusableModal.vue";
-import { useCoursesStore } from "@/stores/CoursesStore";
-import { useSchedulesStore } from "@/stores/SchedulesStore";
-import CourseSearchResults from "@/components/CourseSearchResults.vue";
+	import { reactive, onMounted, ref } from 'vue'
+	import VueDatePicker from '@vuepic/vue-datepicker'
+	import '@vuepic/vue-datepicker/dist/main.css'
+	import ReusableModal from "@/components/ReusableModal.vue"
+	import { useCoursesStore } from "@/stores/CoursesStore"
+	import { useSchedulesStore } from "@/stores/SchedulesStore"
+	import CourseSearchResults from "@/components/CourseSearchResults.vue"
 
-const coursesStore = useCoursesStore()
-const scheduleStore = useSchedulesStore()
+	const coursesStore = useCoursesStore()
+	const scheduleStore = useSchedulesStore()
 
-const model = reactive({
-	course: {
-		startDateTime: null,
-		title: "",
-		_id: ""
-	}
-})
-
-onMounted(() => {
-	coursesStore.getCourses()
-	model.course.startDateTime = new Date();
-})
-
-const modalActive = ref(null);
-
-const courseSearchResultsRef = ref(null);
-const courseSuggestions = ref([]);
-const noCoursesFound = ref(false);
-
-const openModal = () => {
-	modalActive.value = true
-}
-
-const closeModal = () => {
-	modalActive.value = false
-}
-
-const searchCourse = () => {
-	model.course._id = "";
-	const query = model.course.title;
-
-	courseSuggestions.value = coursesStore.model.courses.filter((course) => {
-		if (course.title.toLowerCase().includes(query.toLowerCase())) {
-			return course
+	const model = reactive({
+		course: {
+			startDateTime: null,
+			title: "",
+			_id: ""
 		}
 	})
 
-	noCoursesFound.value = courseSuggestions.value.length === 0;
+	onMounted(() => {
+		coursesStore.getCourses()
+		model.course.startDateTime = new Date()
+	})
 
-	console.log(courseSuggestions.value)
-}
+	const modalActive = ref(null)
 
-const clearCourseSuggestions = () => {
-	courseSuggestions.value = [];
-	noCoursesFound.value = false;
-}
+	const courseSearchResultsRef = ref(null)
+	const courseSuggestions = ref([])
+	const noCoursesFound = ref(false)
 
-const selectCourseSuggestion = (suggestion) => {
-	model.course._id = suggestion._id;
-	model.course.title = suggestion.title;
-	courseSuggestions.value = [];
-}
-
-const handleSubmit = async () => {
-	const updateSchedule = await coursesStore.addCourseToSchedule({
-		course: model.course._id,
-		startDateTime: model.course.startDateTime
-	}, scheduleStore.model.schedule._id)
-
-	if (updateSchedule.success) {
-		model.course.title = ""
-		closeModal()
+	const openModal = () => {
+		modalActive.value = true
 	}
-}
+
+	const closeModal = () => {
+		modalActive.value = false
+	}
+
+	const searchCourse = () => {
+		model.course._id = ""
+		const query = model.course.title
+
+		courseSuggestions.value = coursesStore.model.courses.filter((course) => {
+			if (course.title.toLowerCase().includes(query.toLowerCase())) {
+				return course
+			}
+		})
+
+		noCoursesFound.value = courseSuggestions.value.length === 0
+
+		console.log(courseSuggestions.value)
+	}
+
+	const clearCourseSuggestions = () => {
+		courseSuggestions.value = []
+		noCoursesFound.value = false
+	}
+
+	const selectCourseSuggestion = (suggestion) => {
+		model.course._id = suggestion._id
+		model.course.title = suggestion.title
+		courseSuggestions.value = []
+	}
+
+	const handleSubmit = async () => {
+		const updateSchedule = await coursesStore.addCourseToSchedule({
+			course: model.course._id,
+			startDateTime: model.course.startDateTime
+		}, scheduleStore.model.schedule._id)
+
+		if (updateSchedule.success) {
+			model.course.title = ""
+			closeModal()
+		}
+	}
 </script>
 
 <style scoped lang="scss">
-
 	.search-suggestions-wrapper {
 		//min-height: 8.5rem;
 	}
@@ -135,5 +133,4 @@ const handleSubmit = async () => {
 	.search-btn {
 		padding: 0.5rem 1.4rem;
 	}
-
 </style>

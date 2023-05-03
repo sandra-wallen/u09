@@ -39,7 +39,7 @@
 						   id="create-course-color-input"
 						   class="form-control form-control-color"
 						   v-model="model.course.color"
-						   title="Choose color" />
+						   title="Choose color"/>
 				</div>
 				<div class="col-12 d-flex justify-content-end mt-5">
 					<button type="button" class="btn btn-secondary" @click="closeModal">
@@ -55,68 +55,69 @@
 </template>
 
 <script setup>
-import ReusableModal from "@/components/ReusableModal.vue";
-import {reactive, ref, computed} from "vue";
-import { useCoursesStore } from "@/stores/CoursesStore";
-import { useNotification } from "@kyvg/vue3-notification";
+	import ReusableModal from "@/components/ReusableModal.vue"
+	import { reactive, ref, computed } from "vue"
+	import { useCoursesStore } from "@/stores/CoursesStore"
+	import { useNotification } from "@kyvg/vue3-notification"
 
-const courseStore = useCoursesStore()
-const { notify } = useNotification();
+	const courseStore = useCoursesStore()
+	const { notify } = useNotification()
 
-const model = reactive({
-	course: {
-		title: "",
-		color: "#D7BFBA",
-		length: null
+	const model = reactive({
+		course: {
+			title: "",
+			color: "#D7BFBA",
+			length: null
+		}
+	})
+
+	const formValid = computed(() => {
+		return model.course.title !== ""
+			&& model.course.color !== ""
+			&& model.course.length !== null
+	})
+
+	const modalActive = ref(false)
+
+	const openModal = () => {
+		modalActive.value = true
 	}
-})
 
-const formValid = computed(() => {
-	return model.course.title !== "" && model.course.color !== "" && model.course.length !== null
-})
+	const closeModal = () => {
+		modalActive.value = false
+	}
 
-const modalActive = ref(false);
+	const handleSubmit = async () => {
+		if (formValid.value) {
+			const createdCourse = await courseStore.createCourse(model.course)
 
-const openModal = () => {
-	modalActive.value = true
-}
-
-const closeModal = () => {
-	modalActive.value = false
-}
-
-const handleSubmit = async () => {
-	if (formValid.value) {
-		const createdCourse = await courseStore.createCourse(model.course)
-
-		if (createdCourse.success) {
-			closeModal()
-			notify({
-				title: "Course successfully created",
-				type: "success",
-				duration: 3000
-			})
-		} else {
-			notify({
-				title: "Course could not be created",
-				text: "Please try again",
-				type: "error",
-				duration: 6000
-			})
+			if (createdCourse.success) {
+				closeModal()
+				notify({
+					title: "Course successfully created",
+					type: "success",
+					duration: 3000
+				})
+			} else {
+				notify({
+					title: "Course could not be created",
+					text: "Please try again",
+					type: "error",
+					duration: 6000
+				})
+			}
 		}
 	}
-}
 </script>
 
 <style scoped lang="scss">
-
 	input {
 		&.form-control {
 			max-width: 400px;
+
 			&.form-control-color {
 				width: 100px;
 			}
 		}
 	}
-
 </style>

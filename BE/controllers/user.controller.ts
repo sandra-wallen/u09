@@ -37,7 +37,7 @@ const loginUser = async (req: Request, res: Response) => {
             return res.status(401).json("Invalid password");
         }
         if (user) {
-            const token :string = jwt.sign(
+            const token: string = jwt.sign(
                 { id: user._id, isAdmin: user.isAdmin },
                 process.env.JWT_SECRET!,
                 {
@@ -45,7 +45,7 @@ const loginUser = async (req: Request, res: Response) => {
                 }
             );
 
-            const expires : Date = new Date(Date.now() + 86400 * 1000);
+            const expires: Date = new Date(Date.now() + 86400 * 1000);
 
             return res
                 .cookie("access_token", token, {
@@ -72,17 +72,17 @@ const loginUser = async (req: Request, res: Response) => {
     }
 };
 
-const updateUser = async (req: Request, res: Response)=> {
+const updateUser = async (req: Request, res: Response) => {
     const { user, id } = req.body;
-    
+
     if (!user) {
         return res
             .status(400)
             .json("Please provide user information");
     } else {
         try {
-            const updatedUser: any | null = await User.findByIdAndUpdate(id, {...user}, { new: true });
-            
+            const updatedUser: any | null = await User.findByIdAndUpdate(id, { ...user }, { new: true });
+
             if (updatedUser) {
                 return res.status(200).json({
                     success: true,
@@ -106,9 +106,9 @@ const updateUser = async (req: Request, res: Response)=> {
             });
         }
     }
-}
+};
 
-const updatePassword = async (req: Request, res: Response)=> {
+const updatePassword = async (req: Request, res: Response) => {
     const { currentPassword, newPassword, id } = req.body;
 
     if (!currentPassword || !newPassword) {
@@ -126,28 +126,28 @@ const updatePassword = async (req: Request, res: Response)=> {
                 return res.status(401).json("Invalid current password");
             } else {
                 const salt = await bcrypt.genSalt(10);
-                const hashedPassword = await bcrypt.hashSync(newPassword, salt)
-                
-                const updatedUser = await User.findByIdAndUpdate(id, { password: hashedPassword })
-                
+                const hashedPassword = await bcrypt.hashSync(newPassword, salt);
+
+                const updatedUser = await User.findByIdAndUpdate(id, { password: hashedPassword });
+
                 if (updatedUser) {
                     return res.status(200).json({
                         success: true
-                    })
+                    });
                 } else {
                     return res.status(404).json({
                         success: false,
                         message: "Could not update password",
                     });
                 }
-                
+
             }
 
         } catch (error: any) {
             return res.status(500).json(error.message);
         }
     }
-}
+};
 
 const deleteUser = async (req: Request, res: Response) => {
     try {
@@ -169,7 +169,7 @@ const deleteUser = async (req: Request, res: Response) => {
             error,
         });
     }
-}
+};
 
 const logoutUser = async (req: Request, res: Response) => {
     return res
@@ -236,13 +236,13 @@ const authUser = (req: Request, res: Response, next: any) => {
 
 const authAdmin = (req: Request, res: Response, next: any) => {
     console.log(req.body.isAdmin);
-    
+
     if (req.body.isAdmin) {
         next();
     } else {
         return res.status(403).json({ message: "Not authorized" });
     }
-    
-}
+
+};
 
 export { registerUser, loginUser, updateUser, updatePassword, deleteUser, logoutUser, getUser, authUser, authAdmin };

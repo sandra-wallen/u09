@@ -1,17 +1,18 @@
 <template>
 	<div class="col-12 col-xl-8 offset-xl-2">
-		<Notifications position="bottom center" pauseOnHover />
-		<NavBar />
-		<router-view />
+		<Notifications position="bottom center" pauseOnHover/>
+		<NavBar/>
+		<router-view/>
 	</div>
 </template>
 
 <script setup>
-  	import NavBar from "./components/NavBar"
+	import NavBar from "./components/NavBar"
 </script>
 
 <style lang="scss">
 	@import "@/styles/index";
+
 	#app {
 		font-family: $font-family-base;
 		-webkit-font-smoothing: antialiased;

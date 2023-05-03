@@ -46,7 +46,8 @@
 						Passwords must match
 					</div>
 				</div>
-				<button type="button" class="btn btn-primary w-50 mt-4" :disabled="!validation.formValid.value" @click="handleSubmit">
+				<button type="button" class="btn btn-primary w-50 mt-4" :disabled="!validation.formValid.value"
+						@click="handleSubmit">
 					Register
 				</button>
 			</div>
@@ -55,12 +56,14 @@
 </template>
 
 <script setup>
-	import { computed, reactive, ref, defineEmits } from "vue"
-	import { useUserStore} from "@/stores/UserStore"
-	import { useNotification } from "@kyvg/vue3-notification";
+	import { computed, reactive, ref } from "vue"
+	import { useUserStore } from "@/stores/UserStore"
+	import { useNotification } from "@kyvg/vue3-notification"
 
 	const userStore = useUserStore()
-	const { notify } = useNotification();
+	const { notify } = useNotification()
+
+	// eslint-disable-next-line
 	const emit = defineEmits(['created'])
 
 	const model = reactive({

@@ -1,7 +1,7 @@
 <template>
 	<main>
-		<LoginForm v-if="!register" />
-		<RegisterForm v-if="register" @created="toggleRegister" />
+		<LoginForm v-if="!register"/>
+		<RegisterForm v-if="register" @created="toggleRegister"/>
 		<div>
 			<p v-if="!register" class="text-16">Not a member yet?</p>
 			<p v-else class="text-16">Already a member?</p>

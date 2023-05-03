@@ -6,7 +6,13 @@ import {
     registerUser,
     updatePassword, updateUser
 } from "../controllers/user.controller";
-import { adminGetUsers, adminGetUser, adminUpdateUser, adminUpdateUserPassword, adminDeleteUser } from "../controllers/admin.controller";
+import {
+    adminGetUsers,
+    adminGetUser,
+    adminUpdateUser,
+    adminUpdateUserPassword,
+    adminDeleteUser
+} from "../controllers/admin.controller";
 import {
     createSchedule,
     deleteSchedule,
@@ -58,7 +64,7 @@ router.post("/create-schedule", authUser, createSchedule);
 router.patch("/update-schedule/:scheduleId", authUser, updateSchedule);
 router.delete("/delete-schedule/:scheduleId", authUser, deleteSchedule);
 
-//Course routes
+// Course routes
 router.get("/courses", authUser, getAllCourses);
 router.get("/schedule/courses/:scheduleId", authUser, getAllCoursesAccociatedWithSchedule);
 router.get("/course/:courseId", authUser, getCourse);

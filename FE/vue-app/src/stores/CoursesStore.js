@@ -1,28 +1,28 @@
-import { defineStore } from "pinia";
-import { reactive, computed } from "vue";
-import { useSchedulesStore } from "./SchedulesStore";
-import { useUserStore } from "@/stores/UserStore";
-import axios from "axios";
+import { defineStore } from "pinia"
+import { reactive } from "vue"
+import { useSchedulesStore } from "./SchedulesStore"
+import { useUserStore } from "@/stores/UserStore"
+import axios from "axios"
 
 export const useCoursesStore = defineStore("courses", () => {
-	const schedulesStore = useSchedulesStore();
+	const schedulesStore = useSchedulesStore()
 	const userStore = useUserStore()
 	const baseUrl = process.env.VUE_APP_BASE_URL ? process.env.VUE_APP_BASE_URL : "http://localhost:8000"
 
 	const model = reactive({
 		courses: [],
 		course: {}
-	});
+	})
 
 	const getCourses = async () => {
 		try {
 			const response = await axios.get(`${baseUrl}/courses`, {
 				headers: { "Content-Type": "application/json" },
 				withCredentials: true,
-			});
+			})
 
 			if (response.data.success) {
-				model.courses = response.data.courses;
+				model.courses = response.data.courses
 			}
 
 			return response.data
@@ -30,7 +30,7 @@ export const useCoursesStore = defineStore("courses", () => {
 		} catch (error) {
 			return { success: false }
 		}
-	};
+	}
 
 	const getCourse = async (id) => {
 		try {
@@ -60,9 +60,9 @@ export const useCoursesStore = defineStore("courses", () => {
 			})
 
 			if (response.data.success) {
-				model.courses = [ ...model.courses, response.data.course ]
+				model.courses = [...model.courses, response.data.course]
 			}
-			return response.data;
+			return response.data
 
 		} catch (error) {
 			return { success: false }
@@ -88,8 +88,9 @@ export const useCoursesStore = defineStore("courses", () => {
 		}
 	}
 
+	// This is a patch method on schedule
 	const addCourseToSchedule = async (course, scheduleId) => {
-		const updatedCourses = schedulesStore.model.schedule.courses = [ ...schedulesStore.model.schedule.courses, course ]
+		const updatedCourses = schedulesStore.model.schedule.courses = [...schedulesStore.model.schedule.courses, course]
 
 		console.log({
 			courses: updatedCourses
@@ -105,7 +106,7 @@ export const useCoursesStore = defineStore("courses", () => {
 			)
 			console.log(response)
 			if (response.data.success) {
-				schedulesStore.model.schedule = response.data.updatedSchedule;
+				schedulesStore.model.schedule = response.data.updatedSchedule
 			}
 
 			return response.data
@@ -133,10 +134,11 @@ export const useCoursesStore = defineStore("courses", () => {
 		}
 	}
 
+	// This is a patch method on schedule
 	const deleteCourseFromSchedule = async (courseId, scheduleId) => {
 		const filteredCourses = schedulesStore.model.schedule.courses.filter(
 			(item) => item.course !== courseId
-		);
+		)
 		try {
 			const response = await axios.patch(`${baseUrl}/update-schedule/${scheduleId}`,
 				{
@@ -146,10 +148,10 @@ export const useCoursesStore = defineStore("courses", () => {
 					headers: { "Content-Type": "application/json" },
 					withCredentials: true,
 				}
-			);
+			)
 
 			if (response.data.success) {
-				schedulesStore.model.schedule = response.data.updatedSchedule;
+				schedulesStore.model.schedule = response.data.updatedSchedule
 			}
 
 			return response.data
@@ -157,12 +159,22 @@ export const useCoursesStore = defineStore("courses", () => {
 		} catch (error) {
 			return { success: false }
 		}
-	};
+	}
 
 	const clearState = () => {
 		model.courses = []
 		model.course = {}
 	}
 
-	return { model, getCourses, getCourse, updateCourse, createCourse, addCourseToSchedule, deleteCourse, deleteCourseFromSchedule, clearState };
-});
+	return {
+		model,
+		getCourses,
+		getCourse,
+		updateCourse,
+		createCourse,
+		addCourseToSchedule,
+		deleteCourse,
+		deleteCourseFromSchedule,
+		clearState
+	}
+})

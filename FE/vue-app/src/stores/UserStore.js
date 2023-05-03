@@ -1,11 +1,10 @@
-import axios from "axios";
-import { defineStore } from "pinia";
-import { reactive, computed } from "vue";
+import axios from "axios"
+import { defineStore } from "pinia"
+import { reactive, computed } from "vue"
 import { useStorage } from '@vueuse/core'
 import { useAdminStore } from "@/stores/AdminStore"
 import { useSchedulesStore } from "@/stores/SchedulesStore"
 import { useCoursesStore } from "@/stores/CoursesStore"
-import {clear} from "core-js/internals/task";
 
 export const useUserStore = defineStore("user", () => {
 	const adminStore = useAdminStore()
@@ -24,11 +23,11 @@ export const useUserStore = defineStore("user", () => {
 		sessionExpiration: useStorage('sessionExpiration', {
 			expires: null
 		})
-	});
+	})
 
 	const sessionExists = computed(() => {
 		return new Date(model.sessionExpiration.expires) > new Date()
-	});
+	})
 
 	const isAdmin = computed(() => {
 		return model.user.isAdmin
@@ -80,9 +79,9 @@ export const useUserStore = defineStore("user", () => {
 					headers: { "Content-Type": "application/json" },
 					withCredentials: true,
 				}
-			);
+			)
 			if (response.data.success) {
-				model.user = response.data.user;
+				model.user = response.data.user
 			}
 			return response.data
 
@@ -96,15 +95,15 @@ export const useUserStore = defineStore("user", () => {
 			const response = await axios.patch(`${baseUrl}/update-user`, {
 					user: userInfo
 				},
-			{
+				{
 					headers: { "Content-Type": "application/json" },
 					withCredentials: true,
 				}
 			)
 			if (response.data.success) {
-				model.user = response.data.user;
+				model.user = response.data.user
 			}
-			return response.data;
+			return response.data
 
 		} catch (error) {
 			return { success: false }
@@ -120,10 +119,10 @@ export const useUserStore = defineStore("user", () => {
 				headers: { "Content-Type": "application/json" },
 				withCredentials: true,
 			})
-			return response.data;
+			return response.data
 
 		} catch (error) {
-			return { success: false, status: error.response.status };
+			return { success: false, status: error.response.status }
 		}
 	}
 
@@ -141,7 +140,7 @@ export const useUserStore = defineStore("user", () => {
 
 	const logoutUser = async () => {
 		try {
-			const response = await axios.post(`${baseUrl}/logout`, {},{
+			const response = await axios.post(`${baseUrl}/logout`, {}, {
 				headers: { "Content-Type": "application/json" },
 				withCredentials: true,
 			})
@@ -158,6 +157,7 @@ export const useUserStore = defineStore("user", () => {
 	}
 
 	const clearState = () => {
+		// To avoid userStore already been cleared, clear adminStore state here
 		if (model.user.isAdmin) {
 			adminStore.model.users = []
 		}
@@ -167,8 +167,20 @@ export const useUserStore = defineStore("user", () => {
 			email: "",
 			name: ""
 		}
-		model.sessionExpiration.expires = null;
+		model.sessionExpiration.expires = null
 	}
 
-	return { model, sessionExists, isAdmin, loginUser, registerUser, getUser, updateUser, updatePassword, deleteUser, logoutUser, clearState };
-});
+	return {
+		model,
+		sessionExists,
+		isAdmin,
+		loginUser,
+		registerUser,
+		getUser,
+		updateUser,
+		updatePassword,
+		deleteUser,
+		logoutUser,
+		clearState
+	}
+})
