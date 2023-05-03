@@ -55,7 +55,8 @@
 					<button type="button" class="btn btn-secondary" @click="closeModal">
 						Cancel
 					</button>
-					<button type="button" class="btn btn-primary ms-3" :disabled="!validation.formValid.value" @click="handleSubmit">
+					<button type="button" class="btn btn-primary ms-3" :disabled="!validation.formValid.value"
+							@click="handleSubmit">
 						Create
 					</button>
 				</div>
@@ -65,15 +66,15 @@
 </template>
 
 <script setup>
-	import ReusableModal from "@/components/ReusableModal.vue";
-	import { computed, reactive, ref, defineEmits } from "vue"
-	import { useUserStore} from "@/stores/UserStore"
+	import ReusableModal from "@/components/ReusableModal.vue"
+	import { computed, reactive, ref } from "vue"
+	import { useUserStore } from "@/stores/UserStore"
 	import { useAdminStore } from "@/stores/AdminStore"
-	import { useNotification } from "@kyvg/vue3-notification";
+	import { useNotification } from "@kyvg/vue3-notification"
 
 	const userStore = useUserStore()
 	const adminStore = useAdminStore()
-	const { notify } = useNotification();
+	const { notify } = useNotification()
 
 	const model = reactive({
 		user: {
@@ -85,7 +86,7 @@
 		repeatPassword: ""
 	})
 
-	const modalActive = ref(false);
+	const modalActive = ref(false)
 
 	const openModal = () => {
 		modalActive.value = true
@@ -164,6 +165,6 @@
 	}
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 
 </style>

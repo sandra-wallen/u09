@@ -11,7 +11,7 @@
 				class="list-group-item py-1 border-on-hover">
 				<div class="row">
 					<div class="col-12">
-						<p class="mb-0 text-14">{{suggestion.title}}</p>
+						<p class="mb-0 text-14">{{ suggestion.title }}</p>
 					</div>
 				</div>
 			</li>
@@ -25,17 +25,24 @@
 </template>
 
 <script setup>
-	import { ref, onUpdated, defineProps, defineEmits } from "vue";
+	import { ref, onUpdated } from "vue"
+
+	// eslint-disable-next-line
 	const props = defineProps({
 		suggestions: Array,
 		onSelect: Function,
 		noSuggestionsFound: Boolean
 	})
+
 	const element = ref()
+
+	// eslint-disable-next-line
 	const emit = defineEmits(["blur"])
+
 	const handleBlur = () => {
 		emit('blur')
 	}
+
 	onUpdated(() => {
 		element.value.focus()
 	})

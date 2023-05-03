@@ -9,7 +9,7 @@
 
 <style scoped>
 	footer {
-		margin-top: auto
+		margin-top: auto;
 	}
 
 </style>

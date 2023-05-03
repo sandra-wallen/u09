@@ -1,20 +1,19 @@
 import { createRouter, createWebHistory } from "vue-router"
-import HomePage from "../views/HomePage"
 import LandingPage from "../views/LandingPage"
 import ProfilePage from "../views/ProfilePage"
 import SchedulesPage from "../views/SchedulesPage"
 import EditSchedulePage from "../views/EditSchedulePage"
-import {useUserStore} from "@/stores/UserStore"
+import { useUserStore } from "@/stores/UserStore"
 import CoursesPage from "@/views/CoursesPage.vue"
 import EditCoursePage from "@/views/EditCoursePage.vue"
 import AdminDashboardPage from "@/views/AdminDashboardPage.vue"
-import EditUserPage from "@/views/EditUserPage.vue";
+import EditUserPage from "@/views/EditUserPage.vue"
 
 const routes = [
 	{
 		path: "/",
-		name: "home",
-		component: HomePage,
+		name: "schedules",
+		component: SchedulesPage,
 	},
 	{
 		path: "/login",
@@ -56,12 +55,12 @@ const routes = [
 		name: "admin-dashboard-update-user",
 		component: EditUserPage
 	}
-];
+]
 
 const router = createRouter({
 	history: createWebHistory(process.env.BASE_URL),
 	routes,
-});
+})
 
 router.beforeEach((to, from) => {
 	const userStore = useUserStore()
@@ -77,4 +76,4 @@ router.beforeEach((to, from) => {
 	}
 })
 
-export default router;
+export default router

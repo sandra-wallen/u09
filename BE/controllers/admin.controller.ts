@@ -1,10 +1,10 @@
-﻿import {Request, Response} from "express";
+﻿import { Request, Response } from "express";
 import User from "../database/models/user.model";
 import bcrypt from 'bcrypt';
 
 const adminGetUsers = async (req: Request, res: Response) => {
     try {
-        const users : any = await User.find();
+        const users: any = await User.find();
 
         if (users) {
             const data = users.map((user) => {
@@ -14,8 +14,8 @@ const adminGetUsers = async (req: Request, res: Response) => {
                     name: user.name,
                     createdAt: user.createdAt,
                     isAdmin: user.isAdmin
-                }
-            })
+                };
+            });
             return res.status(200).json({
                 success: true,
                 users: data
@@ -27,13 +27,13 @@ const adminGetUsers = async (req: Request, res: Response) => {
             });
         }
     } catch (error) {
-        return res.status(500).json({success: false, error});
+        return res.status(500).json({ success: false, error });
     }
-}
+};
 
 const adminGetUser = async (req: Request, res: Response) => {
     try {
-        const user : any = await User.findById(req.params.userId);
+        const user: any = await User.findById(req.params.userId);
 
         if (user) {
             return res.status(200).json({
@@ -52,19 +52,19 @@ const adminGetUser = async (req: Request, res: Response) => {
                 message: "User not found",
             });
         }
-        
+
     } catch (error) {
         return res.status(500).json({ success: false, error });
     }
-}
+};
 
 const adminUpdateUser = async (req: Request, res: Response) => {
     try {
-        const updatedUser : any = await User.findByIdAndUpdate(req.params.userId, {
+        const updatedUser: any = await User.findByIdAndUpdate(req.params.userId, {
                 ...req.body.user
             },
-            {new: true});
-        
+            { new: true });
+
         if (updatedUser) {
             return res.status(200).json({
                 success: true,
@@ -80,7 +80,7 @@ const adminUpdateUser = async (req: Request, res: Response) => {
             return res.status(404).json({
                 success: false,
                 message: "Could not update user",
-            }); 
+            });
         }
     } catch (error) {
         return res.status(500).json({
@@ -88,14 +88,14 @@ const adminUpdateUser = async (req: Request, res: Response) => {
             error,
         });
     }
-}
+};
 
 const adminUpdateUserPassword = async (req: Request, res: Response) => {
     try {
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hashSync(req.body.user.password, salt);
-        
-        const updatedUser : any = await User.findByIdAndUpdate(req.params.userId, 
+
+        const updatedUser: any = await User.findByIdAndUpdate(req.params.userId,
             { password: hashedPassword },
             { new: true }
         );
@@ -110,14 +110,14 @@ const adminUpdateUserPassword = async (req: Request, res: Response) => {
                 message: "Could not update password",
             });
         }
-        
+
     } catch (error) {
         return res.status(500).json({
             success: false,
             error,
         });
     }
-}
+};
 const adminDeleteUser = async (req: Request, res: Response) => {
     try {
         const deletedUser = await User.findByIdAndDelete(req.params.userId);
@@ -138,6 +138,6 @@ const adminDeleteUser = async (req: Request, res: Response) => {
             error,
         });
     }
-}
+};
 
 export { adminGetUsers, adminGetUser, adminUpdateUser, adminUpdateUserPassword, adminDeleteUser };

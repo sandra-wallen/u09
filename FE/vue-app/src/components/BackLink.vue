@@ -12,6 +12,7 @@
 	const goBack = () => {
 		router.back()
 	}
+
 </script>
 
 <style scoped lang="scss">
@@ -19,6 +20,7 @@
 
 	.back-link {
 		color: $black;
+
 		&:hover {
 			color: $rose-dark;
 		}

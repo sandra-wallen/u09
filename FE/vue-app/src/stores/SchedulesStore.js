@@ -62,11 +62,10 @@ export const useSchedulesStore = defineStore("schedules", () => {
 					headers: { "Content-Type": "application/json" },
 					withCredentials: true,
 				}
-
 			)
 
 			if (response.data.success) {
-				model.schedules = [ ...model.schedules, response.data.schedule ]
+				model.schedules = [...model.schedules, response.data.schedule]
 			}
 			return response.data
 
