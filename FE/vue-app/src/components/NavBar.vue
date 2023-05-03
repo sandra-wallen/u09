@@ -56,12 +56,6 @@
 						@click="logoutUser">
 					Logout
 				</button>
-				<button v-if="!userStore.sessionExists"
-						class="btn btn-primary ms-auto"
-						type="button"
-						@click="router.push({ path: '/login' })">
-					Login
-				</button>
 			</div>
 		</div>
 	</nav>
