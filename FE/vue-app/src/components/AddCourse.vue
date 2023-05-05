@@ -15,9 +15,9 @@
 							   week-numbers/>
 			</div>
 			<div class="row gx-0 mb-3">
-				<label for="course-search-input" class="form-label text-start">Course</label>
+				<label for="add-course-search-input" class="form-label text-start">Course</label>
 				<div class="col-9">
-					<input id="course-search-input"
+					<input id="add-course-search-input"
 						   type="text"
 						   class="form-control"
 						   placeholder="Search.."
@@ -40,7 +40,7 @@
 					Cancel
 				</button>
 				<button type="button" class="btn btn-primary ms-1" @click="handleSubmit">
-					Create
+					Add
 				</button>
 			</div>
 		</form>

@@ -3,23 +3,23 @@
 		<form>
 			<div class="col-12 col-md-4 offset-md-4">
 				<div class="mb-5">
-					<label for="register-name-input" class="form-label w-100 text-start">
+					<label for="register-user-name-input" class="form-label w-100 text-start">
 						Name
 					</label>
 					<input
 						type="text"
 						class="form-control"
-						id="register-name-input"
+						id="register-user-name-input"
 						v-model="model.user.name"/>
 				</div>
 				<div class="mb-5">
-					<label for="register-email-input" class="form-label w-100 text-start">
+					<label for="register-user-email-input" class="form-label w-100 text-start">
 						E-mail
 					</label>
 					<input
 						type="email"
 						class="form-control"
-						id="register-email-input"
+						id="register-user-email-input"
 						v-model="model.user.email"/>
 				</div>
 				<div class="mb-5">
@@ -33,13 +33,13 @@
 						v-model="model.user.password"/>
 				</div>
 				<div class="mb-5">
-					<label for="register-repeat-password-input" class="form-label w-100 text-start">
+					<label for="register-user-repeat-password-input" class="form-label w-100 text-start">
 						Repeat password
 					</label>
 					<input
 						type="password"
 						:class="['form-control', { 'is-invalid': repeatPasswordValid === false }]"
-						id="register-repeat-password-input"
+						id="register-user-repeat-password-input"
 						v-model="model.repeatPassword"
 						@blur="repeatPasswordValid = validation.passwordsMatch.value"/>
 					<div v-if="repeatPasswordValid === false" class="invalid-feedback text-16 text-start">

@@ -8,43 +8,43 @@
 		<form>
 			<div class="row gx-0 gy-4 py-3">
 				<div class="col-12">
-					<label for="register-name-input" class="form-label w-100 text-start">
+					<label for="admin-register-user-name-input" class="form-label w-100 text-start">
 						Name
 					</label>
 					<input
 						type="text"
 						class="form-control"
-						id="register-name-input"
+						id="admin-register-user-name-input"
 						v-model="model.user.name"/>
 				</div>
 				<div class="col-12">
-					<label for="register-email-input" class="form-label w-100 text-start">
+					<label for="admin-register-user-email-input" class="form-label w-100 text-start">
 						E-mail
 					</label>
 					<input
 						type="email"
 						class="form-control"
-						id="register-email-input"
+						id="admin-register-user-email-input"
 						v-model="model.user.email"/>
 				</div>
 				<div class="col-12">
-					<label for="register-password-input" class="form-label w-100 text-start">
+					<label for="admin-register-user-password-input" class="form-label w-100 text-start">
 						Password
 					</label>
 					<input
 						type="password"
 						class="form-control"
-						id="register-password-input"
+						id="admin-register-user-password-input"
 						v-model="model.user.password"/>
 				</div>
 				<div class="col-12">
-					<label for="register-repeat-password-input" class="form-label w-100 text-start">
+					<label for="admin-register-user-repeat-password-input" class="form-label w-100 text-start">
 						Repeat password
 					</label>
 					<input
 						type="password"
 						:class="['form-control', { 'is-invalid': repeatPasswordValid === false }]"
-						id="register-repeat-password-input"
+						id="admin-register-user-repeat-password-input"
 						v-model="model.repeatPassword"
 						@blur="repeatPasswordValid = validation.passwordsMatch.value"/>
 					<div v-if="repeatPasswordValid === false" class="invalid-feedback text-16 text-start">

@@ -1,9 +1,9 @@
 <template>
 	<nav class="navbar navbar-expand-lg p-5 text-20">
 		<div class="container-fluid">
-			<a class="navbar-brand text-22 me-5" href="#">
-				App name
-			</a>
+			<RouterLink to="/schedules" class="navbar-brand text-22 me-5">
+				u09
+			</RouterLink>
 
 			<!--	Hamburger menu, small devices		-->
 			<button

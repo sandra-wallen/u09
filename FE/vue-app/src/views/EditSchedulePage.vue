@@ -11,25 +11,25 @@
 				<form>
 					<div class="d-flex flex-column align-items-start mb-3">
 						<label
-							for="inputTitle"
+							for="edit-schedule-title-input"
 							class="form-label">
 							Schedule title
 						</label>
 						<input
 							type="text"
-							id="inputTitle"
+							id="edit-schedule-title-input"
 							class="form-control"
 							placeholder="Title"
 							v-model="schedulesStore.model.schedule.title"/>
 					</div>
 					<div class="d-flex flex-column align-items-start mb-3">
 						<label
-							for="inputDuration"
+							for="edit-schedule-duration-input"
 							class="form-label">
 							Duration
 						</label>
 						<select
-							id="inputDuration"
+							id="edit-schedule-duration-input"
 							class="form-select"
 							aria-label="Input duration"
 							v-model="schedulesStore.model.schedule.duration">
