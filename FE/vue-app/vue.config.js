@@ -7,5 +7,8 @@ module.exports = defineConfig({
 				additionalData: `@import "@/styles/index.scss";`
 			}
 		}
+	},
+	pwa: {
+		name: "u09"
 	}
 });
