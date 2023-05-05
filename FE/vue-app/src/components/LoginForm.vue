@@ -3,23 +3,23 @@
 		<form>
 			<div class="col-12 col-md-4 offset-md-4">
 				<div class="mb-5">
-					<label for="emailInput" class="form-label w-100 text-start">
+					<label for="login-user-email-input" class="form-label w-100 text-start">
 						E-mail
 					</label>
 					<input
 						type="email"
 						class="form-control"
-						id="emailInput"
+						id="login-user-email-input"
 						v-model="model.user.email"/>
 				</div>
 				<div class="mb-5">
-					<label for="passwordInput" class="form-label w-100 text-start">
+					<label for="login-user-password-input" class="form-label w-100 text-start">
 						Password
 					</label>
 					<input
 						type="password"
 						class="form-control"
-						id="passwordInput"
+						id="login-user-password-input"
 						v-model="model.user.password"/>
 				</div>
 				<button type="button" class="btn btn-primary w-50 mt-4" @click="handleSubmit">
