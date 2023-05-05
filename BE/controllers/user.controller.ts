@@ -81,6 +81,11 @@ const updateUser = async (req: Request, res: Response) => {
             .json("Please provide user information");
     } else {
         try {
+            // If the request is trying to update password, delete the password property,
+            // password should be updated through the updatePassword endpoint
+            if (user.password) {
+                delete user.password;
+            }
             const updatedUser: any | null = await User.findByIdAndUpdate(id, { ...user }, { new: true });
 
             if (updatedUser) {
