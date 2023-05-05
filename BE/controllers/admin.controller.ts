@@ -60,6 +60,11 @@ const adminGetUser = async (req: Request, res: Response) => {
 
 const adminUpdateUser = async (req: Request, res: Response) => {
     try {
+        // If the request is trying to update password, delete the password property,
+        // password should be updated through the updatePassword endpoint
+        if (req.body.user.password) {
+            delete req.body.user.password;
+        }
         const updatedUser: any = await User.findByIdAndUpdate(req.params.userId, {
                 ...req.body.user
             },
