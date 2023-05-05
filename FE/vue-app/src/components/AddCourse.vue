@@ -2,7 +2,7 @@
 	<button type="button"
 			class="btn btn-primary align-self-end m-2"
 			@click="openModal">
-		Add course
+		+ Add
 	</button>
 	<ReusableModal :modal-active="modalActive" modal-heading="Add course" @close="closeModal">
 		<form>

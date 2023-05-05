@@ -2,7 +2,7 @@
 	<button type="button"
 			class="btn btn-primary align-self-end m-2"
 			@click="openModal">
-		+ New shedule
+		+ New
 	</button>
 	<ReusableModal :modal-active="modalActive" modal-heading="New schedule" @close="closeModal">
 		<form class="text-start">

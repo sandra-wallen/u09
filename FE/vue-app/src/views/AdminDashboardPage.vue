@@ -9,16 +9,21 @@
 			<tr class="text-start text-20">
 				<th style="width: 30%" scope="col">E-mail</th>
 				<th style="width: 25%" scope="col">Name</th>
-				<th style="width: 20%" scope="col">Member since</th>
+				<th style="width: 20%" scope="col" class="hide-on-mobile">Member since</th>
 				<th style="width: 10%" scope="col">Admin</th>
 				<th style="width: 15%" scope="col"></th>
 			</tr>
 			</thead>
 			<tbody class="text-18">
 			<tr v-for="(user) in filteredUsers" class="text-start" :key="user._id">
-				<td>{{ user.email }}</td>
+				<td>
+					<RouterLink
+						class="me-3"
+						:to="`/admin-dashboard/update-user/${user._id}`">{{ user.email }}
+					</RouterLink>
+				</td>
 				<td>{{ user.name }}</td>
-				<td>{{ convertCreatedAt(user.createdAt) }}</td>
+				<td class="hide-on-mobile">{{ convertCreatedAt(user.createdAt) }}</td>
 				<td>{{ user.isAdmin ? "Yes" : "No" }}</td>
 				<td>
 					<RouterLink
@@ -109,5 +114,11 @@
 	.delete-btn {
 		border: none;
 		background: transparent;
+	}
+
+	.hide-on-mobile {
+		@include media-breakpoint-down(sm) {
+			display: none;
+		}
 	}
 </style>
