@@ -1,5 +1,5 @@
 ﻿<template>
-	<main>
+	<main class="px-5">
 		<div class="row gx-2 my-4">
 			<div class="col-12 mb-2">
 				<BackLink/>
@@ -7,7 +7,7 @@
 			<div class="col-12 mb-4">
 				<h1 class="text-start">{{ coursesStore.model.course.title }}</h1>
 			</div>
-			<div class="col-12 col-md-5 pe-5">
+			<div class="col-12 col-md-5 mb-5">
 				<form>
 					<div class="row gx-0 gy-4">
 						<div class="col-12 d-flex flex-column align-items-start">

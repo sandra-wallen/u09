@@ -1,5 +1,5 @@
 <template>
-	<main>
+	<main class="px-5">
 		<div class="row gx-2 my-4 schedule-wrapper justify-content-start">
 			<div class="col-12 mb-2">
 				<BackLink/>
@@ -7,7 +7,7 @@
 			<div class="col-12 mb-4">
 				<h1 class="text-start">{{ schedulesStore.model.schedule.title }}</h1>
 			</div>
-			<div class="col-12 col-md-5 p-2 pe-5">
+			<div class="col-12 col-md-5 p-2 mb-5">
 				<form>
 					<div class="d-flex flex-column align-items-start mb-3">
 						<label

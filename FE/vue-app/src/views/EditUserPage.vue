@@ -1,5 +1,5 @@
 ﻿<template>
-	<main>
+	<main class="px-5">
 		<div class="row gx-2 my-4 schedule-wrapper justify-content-start">
 			<div class="col-12 mb-2">
 				<BackLink/>
