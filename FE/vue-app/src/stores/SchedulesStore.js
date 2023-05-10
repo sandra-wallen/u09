@@ -8,27 +8,107 @@ export const useSchedulesStore = defineStore("schedules", () => {
 	const baseUrl = process.env.VUE_APP_BASE_URL ? process.env.VUE_APP_BASE_URL : "http://localhost:8000"
 
 	const model = reactive({
+		cachedDatabase: null,
 		schedules: [],
 		schedule: {},
 	})
 
-	const getSchedules = async () => {
-		try {
-			const response = await axios.get(
-				`${baseUrl}/schedules`,
-				{
-					headers: { "Content-Type": "application/json" },
-					withCredentials: true,
-				}
-			)
-
-			if (response.data.success) {
-				model.schedules = response.data.schedules
+	const getCachedDatabase = async () => {
+		return new Promise((resolve, reject) => {
+			const request = window.indexedDB.open("u09", 1)
+			console.log('getCachedDB')
+			request.onerror = (event) => {
+				console.log("error", event)
+				reject('Error')
 			}
-			return response.data
 
-		} catch (error) {
-			return { success: false }
+			request.onsuccess = (event) => {
+				model.cachedDatabase = event.target.result
+				resolve(model.cachedDatabase)
+			}
+
+			request.onupgradeneeded = (event) => {
+				const database = event.target.result
+				database.createObjectStore('schedules', {
+					keyPath: '_id',
+				})
+			}
+		})
+	}
+
+	const setCachedSchedules = async (schedules) => {
+		model.cachedDatabase = await getCachedDatabase()
+		console.log('setCachedSchedules')
+		return new Promise((resolve, reject) => {
+			const transaction = model.cachedDatabase.transaction('schedules', 'readwrite')
+			console.log(transaction)
+			const store = transaction.objectStore('schedules')
+
+			schedules.forEach(schedule => store.put(schedule))
+			store.put({ _id: 1234, name: "Hej" })
+
+			transaction.oncomplete = () => {
+				console.log('success')
+				resolve('Schedules successfully saved')
+			}
+
+			transaction.onerror = (event) => {
+				console.log('error', event)
+				reject(event)
+			}
+		})
+	}
+
+	const getCachedSchedules = async () => {
+		model.cachedDatabase = await getCachedDatabase()
+
+		return new Promise((resolve, reject) => {
+			const transaction = model.cachedDatabase.transaction('schedules', 'readonly')
+			const store = transaction.objectStore('schedules')
+
+			const schedules = []
+
+			store.openCursor().onsuccess = (event) => {
+				const cursor = event.target.result
+				if (cursor) {
+					schedules.push(cursor.value)
+					cursor.continue()
+				}
+			}
+
+			transaction.oncomplete = () => {
+				model.schedules = schedules
+				resolve(schedules)
+			}
+
+			transaction.onerror = (event) => {
+				reject(event)
+			}
+		})
+	}
+
+	const getSchedules = async () => {
+		if (navigator.onLine) {
+			try {
+				const response = await axios.get(
+					`${baseUrl}/schedules`,
+					{
+						headers: { "Content-Type": "application/json" },
+						withCredentials: true,
+					}
+				)
+
+				if (response.data.success) {
+					model.schedules = response.data.schedules
+					console.log(await setCachedSchedules(response.data.schedules))
+				}
+				return response.data
+
+			} catch (error) {
+				return { success: false }
+			}
+		} else {
+			await getCachedSchedules()
 		}
 	}
 
