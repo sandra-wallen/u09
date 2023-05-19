@@ -1,7 +1,7 @@
 ﻿<template>
 	<main class="d-flex flex-column mb-3 px-5">
 
-		<CreateCourse/>
+		<CreateCourse v-if="!offline"/>
 		<h1 class="align-self-start">Courses</h1>
 
 		<table v-if="coursesStore.model.courses.length > 0" class="table container-sm">
@@ -11,13 +11,14 @@
 					<th style="width: 15%" scope="col">Length</th>
 					<th style="width: 15%" scope="col">Color</th>
 					<th style="width: 20%" scope="col">Usage</th>
-					<th style="width: 20%" scope="col"></th>
+					<th v-if="!offline" style="width: 20%" scope="col"></th>
 				</tr>
 			</thead>
 			<tbody class="text-18">
 				<tr v-for="(course) in coursesStore.model.courses" class="text-start" :key="course._id">
 					<td>
-						<RouterLink :to="`/edit-course/${course._id}`">{{ course.title }}</RouterLink>
+						<RouterLink v-if="!offline" :to="`/edit-course/${course._id}`">{{ course.title }}</RouterLink>
+						<span v-else>{{ course.title }}</span>
 					</td>
 					<td>{{ course.length }} min</td>
 					<td>
@@ -25,7 +26,7 @@
 							:style="{width: 2 + 'rem', height: 2 + 'rem', backgroundColor: course.color, borderRadius: 50 + '%' }"></div>
 					</td>
 					<td>{{ includedInSchedulesLength(course._id) }} schedules</td>
-					<td>
+					<td v-if="!offline">
 						<RouterLink
 							class="me-3"
 							:to="`/edit-course/${course._id}`">
@@ -51,7 +52,7 @@
 	import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome"
 	import { useCoursesStore } from "@/stores/CoursesStore"
 	import { useSchedulesStore } from "@/stores/SchedulesStore"
-	import { onMounted } from "vue"
+	import { onMounted, ref } from "vue"
 	import CreateCourse from "@/components/CreateCourse.vue"
 	import { useNotification } from "@kyvg/vue3-notification"
 
@@ -59,9 +60,29 @@
 	const schedulesStore = useSchedulesStore()
 	const { notify } = useNotification()
 
-	onMounted(() => {
-		coursesStore.getCourses()
-		schedulesStore.getSchedules()
+	const offline = ref(false)
+
+	onMounted(async () => {
+		const courses = await coursesStore.getCourses()
+
+		if (!courses.success) {
+			notify({
+				title: "Your schedules couldn't be fetched",
+				text: "Please try reloading the page",
+				type: "error",
+				duration: 6000,
+			})
+		} else if (courses.success && courses.offline) {
+			notify({
+				title: "You are currently offline",
+				text: "Courses have been loaded from cache, functionality is limited",
+				duration: 6000,
+			})
+		}
+
+		offline.value = courses.offline
+
+		//await schedulesStore.getSchedules()
 	})
 
 	const includedInSchedulesLength = (id) => {
