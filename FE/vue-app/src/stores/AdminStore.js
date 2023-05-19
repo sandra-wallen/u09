@@ -102,5 +102,9 @@ export const useAdminStore = defineStore("admin", () => {
 		}
 	}
 
-	return { model, getUsers, getUser, updateUser, updateUserPassword, deleteUser }
+	const clearCachedData = () => {
+		indexedDb.delete()
+	}
+
+	return { model, getUsers, getUser, updateUser, updateUserPassword, deleteUser, clearCachedData }
 })
