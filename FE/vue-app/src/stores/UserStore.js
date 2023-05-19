@@ -157,18 +157,28 @@ export const useUserStore = defineStore("user", () => {
 			})
 
 			if (response.data.success) {
-				clearState()
+				// Clear pinia store states and indexedDb databases
+				await schedulesStore.clearCachedData()
 				schedulesStore.clearState()
+
+				await coursesStore.clearCachedData()
 				coursesStore.clearState()
+
+				if (model.user.isAdmin) {
+					await adminStore.clearCachedData()
+				}
+				clearState()
 			}
+
 			return response.data
+
 		} catch (error) {
 			return { success: false }
 		}
 	}
 
 	const clearState = () => {
-		// To avoid userStore already been cleared, clear adminStore state here
+		// To avoid userStore already been cleared, clear adminStore state first
 		if (model.user.isAdmin) {
 			adminStore.model.users = []
 		}
@@ -179,6 +189,7 @@ export const useUserStore = defineStore("user", () => {
 			name: ""
 		}
 		model.sessionExpiration.expires = null
+
 	}
 
 	return {

@@ -175,6 +175,10 @@ export const useCoursesStore = defineStore("courses", () => {
 		model.course = {}
 	}
 
+	const clearCachedData = () => {
+		indexedDb.delete()
+	}
+
 	return {
 		model,
 		getCourses,
@@ -184,6 +188,7 @@ export const useCoursesStore = defineStore("courses", () => {
 		addCourseToSchedule,
 		deleteCourse,
 		deleteCourseFromSchedule,
-		clearState
+		clearState,
+		clearCachedData
 	}
 })

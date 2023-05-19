@@ -131,5 +131,9 @@ export const useSchedulesStore = defineStore("schedules", () => {
 		model.schedule = {}
 	}
 
-	return { model, getSchedules, createSchedule, updateSchedule, deleteSchedule, getSchedule, clearState }
+	const clearCachedData = () => {
+		indexedDb.delete()
+	}
+
+	return { model, getSchedules, createSchedule, updateSchedule, deleteSchedule, getSchedule, clearState, clearCachedData }
 })
