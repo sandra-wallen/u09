@@ -47,6 +47,10 @@ export const useUserStore = defineStore("user", () => {
 			if (response.data.success) {
 				model.user = response.data.user
 				model.sessionExpiration.expires = response.data.expires
+				await coursesStore.getCourses()
+				if (model.user.isAdmin) {
+					await adminStore.getUsers()
+				}
 			}
 			return response.data
 
@@ -64,29 +68,36 @@ export const useUserStore = defineStore("user", () => {
 					withCredentials: true,
 				}
 			)
-			console.log(response)
+
 			return response.data
+
 		} catch (error) {
-			console.log(error)
 			return { success: false, status: error.response.status }
 		}
 	}
 
 	const getUser = async () => {
-		try {
-			const response = await axios.get(`${baseUrl}/user`,
-				{
-					headers: { "Content-Type": "application/json" },
-					withCredentials: true,
+		// User is saved in localStorage on login, no need to save in indexedDb.
+		// If offline just return cached localStorage object
+		if (navigator.onLine) {
+			try {
+				const response = await axios.get(`${baseUrl}/user`,
+					{
+						headers: { "Content-Type": "application/json" },
+						withCredentials: true,
+					}
+				)
+				if (response.data.success) {
+					model.user = response.data.user
 				}
-			)
-			if (response.data.success) {
-				model.user = response.data.user
-			}
-			return response.data
 
-		} catch (error) {
-			return { success: false }
+				return { ...response.data, offline: false }
+
+			} catch (error) {
+				return { success: false, offline: false }
+			}
+		} else {
+			return { user: model.user, success: true, offline: true }
 		}
 	}
 
