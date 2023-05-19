@@ -196,7 +196,6 @@
 	}
 
 	watch(() => schedulesStore.model.schedule.courses, (currValue, prevValue) => {
-		console.log('watch')
 		assignPropertiesToCourses(currValue)
 	})
 

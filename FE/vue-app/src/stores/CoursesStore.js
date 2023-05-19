@@ -101,9 +101,6 @@ export const useCoursesStore = defineStore("courses", () => {
 	const addCourseToSchedule = async (course, scheduleId) => {
 		const updatedCourses = schedulesStore.model.schedule.courses = [...schedulesStore.model.schedule.courses, course]
 
-		console.log({
-			courses: updatedCourses
-		})
 		try {
 			const response = await axios.patch(`${baseUrl}/update-schedule/${scheduleId}`, {
 					courses: updatedCourses
@@ -113,7 +110,6 @@ export const useCoursesStore = defineStore("courses", () => {
 					withCredentials: true,
 				}
 			)
-			console.log(response)
 			if (response.data.success) {
 				schedulesStore.model.schedule = response.data.updatedSchedule
 			}
