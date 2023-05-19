@@ -3,7 +3,6 @@ import Schedule from "../database/models/schedule.model";
 
 const getAllSchedules = async (req: Request, res: Response) => {
     try {
-        console.log(req.body);
         const schedules = await Schedule.find({ ownerId: req.body.id });
 
         if (schedules) {

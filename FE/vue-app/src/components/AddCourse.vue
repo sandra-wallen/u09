@@ -97,8 +97,6 @@
 		})
 
 		noCoursesFound.value = courseSuggestions.value.length === 0
-
-		console.log(courseSuggestions.value)
 	}
 
 	const clearCourseSuggestions = () => {

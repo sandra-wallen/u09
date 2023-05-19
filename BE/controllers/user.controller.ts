@@ -240,8 +240,6 @@ const authUser = (req: Request, res: Response, next: any) => {
 };
 
 const authAdmin = (req: Request, res: Response, next: any) => {
-    console.log(req.body.isAdmin);
-
     if (req.body.isAdmin) {
         next();
     } else {
