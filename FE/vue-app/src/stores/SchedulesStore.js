@@ -45,7 +45,6 @@ export const useSchedulesStore = defineStore("schedules", () => {
 			const store = transaction.objectStore('schedules')
 
 			schedules.forEach(schedule => store.put(schedule))
-			store.put({ _id: 1234, name: "Hej" })
 
 			transaction.oncomplete = () => {
 				console.log('success')
