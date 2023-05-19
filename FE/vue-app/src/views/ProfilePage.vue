@@ -2,7 +2,10 @@
 	<main class="mb-3 px-5">
 		<div class="row gx-0">
 			<div v-if="!confirmDeleteUser" class="col-12 d-flex justify-content-end">
-				<button class="btn btn-danger" type="button" @click="confirmDeleteUser = true">Delete account</button>
+				<button class="btn btn-danger"
+						type="button"
+						@click="confirmDeleteUser = true"
+						:disabled="offline">Delete account</button>
 			</div>
 			<div v-if="confirmDeleteUser" class="col-12 d-flex justify-content-end">
 				<p class="text-18 align-self-center mb-0 me-3">Are you sure?</p>
@@ -25,7 +28,10 @@
 							   v-model="userStore.model.user.name">
 					</div>
 					<div class="col-3 ms-3">
-						<button type="button" class="btn btn-primary save-btn" @click="updateUser">Save</button>
+						<button type="button"
+								class="btn btn-primary save-btn"
+								@click="updateUser"
+								:disabled="offline">Save</button>
 					</div>
 				</div>
 				<div class="mb-4">
@@ -34,7 +40,10 @@
 				</div>
 				<div class="row gx-0 py-4">
 					<div v-show="!changePassword" class="col-12">
-						<button type="button" class="btn btn-secondary" @click="changePassword = true">
+						<button type="button"
+								class="btn btn-secondary"
+								@click="changePassword = true"
+								:disabled="offline">
 							Change password
 						</button>
 					</div>
@@ -89,6 +98,8 @@
 	const { notify } = useNotification()
 	const router = useRouter()
 
+	const offline = ref(false)
+
 	const model = reactive({
 		user: {
 			currentPassword: "",
@@ -97,10 +108,28 @@
 		}
 	})
 
-	onMounted(() => {
-		userStore.getUser()
-		schedulesStore.getSchedules()
-		coursesStore.getCourses()
+	onMounted(async () => {
+		const user = await userStore.getUser()
+
+		if (!user.success) {
+			notify({
+				title: "Your information couldn't be fetched",
+				text: "Please try reloading the page",
+				type: "error",
+				duration: 6000,
+			})
+		} else if (user.success && user.offline) {
+			notify({
+				title: "You are currently offline",
+				text: "Your information have been loaded from cache, functionality is limited",
+				duration: 6000,
+			})
+		}
+
+		offline.value = user.offline
+
+		await schedulesStore.getSchedules()
+		await coursesStore.getCourses()
 	})
 
 	const changePassword = ref(false)

@@ -2,8 +2,10 @@ import axios from "axios"
 import { defineStore } from "pinia"
 import { reactive } from "vue"
 import { useUserStore } from "@/stores/UserStore"
+import Localbase from "localbase"
 
 export const useSchedulesStore = defineStore("schedules", () => {
+	const indexedDb = new Localbase('schedulesStore')
 	const userStore = useUserStore()
 	const baseUrl = process.env.VUE_APP_BASE_URL ? process.env.VUE_APP_BASE_URL : "http://localhost:8000"
 
@@ -12,79 +14,6 @@ export const useSchedulesStore = defineStore("schedules", () => {
 		schedules: [],
 		schedule: {},
 	})
-
-	const getCachedDatabase = async () => {
-		return new Promise((resolve, reject) => {
-			const request = window.indexedDB.open("u09", 1)
-			console.log('getCachedDB')
-			request.onerror = (event) => {
-				console.log("error", event)
-				reject('Error')
-			}
-
-			request.onsuccess = (event) => {
-				model.cachedDatabase = event.target.result
-				resolve(model.cachedDatabase)
-			}
-
-			request.onupgradeneeded = (event) => {
-				const database = event.target.result
-				database.createObjectStore('schedules', {
-					keyPath: '_id',
-				})
-			}
-		})
-	}
-
-	const setCachedSchedules = async (schedules) => {
-		model.cachedDatabase = await getCachedDatabase()
-		console.log('setCachedSchedules')
-		return new Promise((resolve, reject) => {
-			const transaction = model.cachedDatabase.transaction('schedules', 'readwrite')
-			console.log(transaction)
-			const store = transaction.objectStore('schedules')
-
-			schedules.forEach(schedule => store.put(schedule))
-
-			transaction.oncomplete = () => {
-				console.log('success')
-				resolve('Schedules successfully saved')
-			}
-
-			transaction.onerror = (event) => {
-				console.log('error', event)
-				reject(event)
-			}
-		})
-	}
-
-	const getCachedSchedules = async () => {
-		model.cachedDatabase = await getCachedDatabase()
-
-		return new Promise((resolve, reject) => {
-			const transaction = model.cachedDatabase.transaction('schedules', 'readonly')
-			const store = transaction.objectStore('schedules')
-
-			const schedules = []
-
-			store.openCursor().onsuccess = (event) => {
-				const cursor = event.target.result
-				if (cursor) {
-					schedules.push(cursor.value)
-					cursor.continue()
-				}
-			}
-
-			transaction.oncomplete = () => {
-				model.schedules = schedules
-				resolve(schedules)
-			}
-
-			transaction.onerror = (event) => {
-				reject(event)
-			}
-		})
-	}
 
 	const getSchedules = async () => {
 		if (navigator.onLine) {
@@ -99,15 +28,19 @@ export const useSchedulesStore = defineStore("schedules", () => {
 
 				if (response.data.success) {
 					model.schedules = response.data.schedules
-					console.log(await setCachedSchedules(response.data.schedules))
+					indexedDb.collection('schedules').set(response.data.schedules)
 				}
-				return response.data
+
+				return { ...response.data, offline: false }
 
 			} catch (error) {
-				return { success: false }
+				return { success: false, offline: false }
 			}
 		} else {
-			await getCachedSchedules()
+			indexedDb.collection('schedules').get().then(schedules => {
+				model.schedules = schedules
+			})
+			return { success: true, offline: true }
 		}
 	}
 

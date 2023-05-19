@@ -3,8 +3,9 @@ import { reactive } from "vue"
 import { useSchedulesStore } from "./SchedulesStore"
 import { useUserStore } from "@/stores/UserStore"
 import axios from "axios"
-
+import Localbase from "localbase"
 export const useCoursesStore = defineStore("courses", () => {
+	const indexedDb = new Localbase('coursesStore')
 	const schedulesStore = useSchedulesStore()
 	const userStore = useUserStore()
 	const baseUrl = process.env.VUE_APP_BASE_URL ? process.env.VUE_APP_BASE_URL : "http://localhost:8000"
@@ -15,20 +16,28 @@ export const useCoursesStore = defineStore("courses", () => {
 	})
 
 	const getCourses = async () => {
-		try {
-			const response = await axios.get(`${baseUrl}/courses`, {
-				headers: { "Content-Type": "application/json" },
-				withCredentials: true,
-			})
+		if (navigator.onLine) {
+			try {
+				const response = await axios.get(`${baseUrl}/courses`, {
+					headers: { "Content-Type": "application/json" },
+					withCredentials: true,
+				})
 
-			if (response.data.success) {
-				model.courses = response.data.courses
+				if (response.data.success) {
+					model.courses = response.data.courses
+					indexedDb.collection('courses').set(response.data.courses)
+				}
+
+				return { ...response.data, offline: false }
+
+			} catch (error) {
+				return { success: false, offline: false }
 			}
-
-			return response.data
-
-		} catch (error) {
-			return { success: false }
+		} else {
+			indexedDb.collection('courses').get().then(courses => {
+				model.courses = courses
+			})
+			return { success: true, offline: true }
 		}
 	}
 

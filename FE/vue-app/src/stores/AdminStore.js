@@ -1,29 +1,39 @@
 ﻿import axios from "axios"
 import { defineStore } from "pinia"
 import { reactive } from "vue"
+import Localbase from "localbase"
 
 export const useAdminStore = defineStore("admin", () => {
+	const indexedDb = new Localbase('adminStore')
 	const baseUrl = process.env.VUE_APP_BASE_URL ? process.env.VUE_APP_BASE_URL : "http://localhost:8000"
 
 	const model = reactive({
 		users: [],
 		user: {}
 	})
-
 	const getUsers = async () => {
-		try {
-			const response = await axios.get(`${baseUrl}/admin/users`, {
-				headers: { "Content-Type": "application/json" },
-				withCredentials: true,
-			})
+		if (navigator.onLine) {
+			try {
+				const response = await axios.get(`${baseUrl}/admin/users`, {
+					headers: { "Content-Type": "application/json" },
+					withCredentials: true,
+				})
 
-			if (response.data.success) {
-				model.users = response.data.users
+				if (response.data.success) {
+					model.users = response.data.users
+					indexedDb.collection('users').set(response.data.users)
+				}
+
+				return { ...response.data, offline: false }
+
+			} catch (error) {
+				return { success: false, offline: false }
 			}
-			return response.data
-
-		} catch (error) {
-			return { success: false }
+		} else {
+			indexedDb.collection('users').get().then(users => {
+				model.users = users
+			})
+			return { success: true, offline: true }
 		}
 	}
 
